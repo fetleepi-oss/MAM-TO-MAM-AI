@@ -1,0 +1,6 @@
+{
+  "name": "MAM-to-MAM AI",
+  "description": "AI-Enabled Sexual, Reproductive & Maternal Health. An early MVP / proof of concept for Ethiopia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
