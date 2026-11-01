@@ -1,7 +1,7 @@
 import React from 'react';
 import { AlertOctagon, PhoneCall, X, ArrowRight, HeartPulse } from 'lucide-react';
 import { LanguageCode } from '../types/srmh';
-import { translations } from '../data/translations';
+import { translations, isLanguageClinicalReviewed, getLanguageConfig } from '../data/translations/index';
 
 interface GlobalDangerAlertProps {
   isOpen: boolean;
@@ -18,7 +18,11 @@ export const GlobalDangerAlert: React.FC<GlobalDangerAlertProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const t = translations[language];
+  const isReviewed = isLanguageClinicalReviewed(language);
+  const langConfig = getLanguageConfig(language);
+  // Show final clinical emergency text only in reviewed languages; otherwise use English
+  const effectiveLang: LanguageCode = isReviewed ? language : 'en';
+  const t = translations[effectiveLang] || translations.en;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-red-950/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
@@ -51,6 +55,13 @@ export const GlobalDangerAlert: React.FC<GlobalDangerAlertProps> = ({
           <div className="bg-red-50 border-b border-red-200 px-6 py-3 text-xs text-red-900 font-bold flex items-center gap-2">
             <HeartPulse className="w-4 h-4 text-red-600 shrink-0" />
             <span>Danger Sign Flagged: {detectedReason}</span>
+          </div>
+        )}
+
+        {/* Translation Pending Safety Guard Notice */}
+        {!isReviewed && (
+          <div className="bg-amber-100 border-b border-amber-300 px-6 py-2.5 text-xs text-amber-950 font-medium">
+            <strong>Translation pending clinical review:</strong> To protect life and medical accuracy, emergency danger signs are shown in verified English for {langConfig.name} ({langConfig.nativeName}).
           </div>
         )}
 

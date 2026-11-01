@@ -5,8 +5,8 @@
 
 import React, { useState } from 'react';
 import { MessageSquare, Sparkles } from 'lucide-react';
-import { LanguageCode, JourneyStage } from './types/srmh';
-import { translations } from './data/translations';
+import { LanguageCode, LanguageConfig, JourneyStage } from './types/srmh';
+import { translations, AVAILABLE_LANGUAGES } from './data/translations/index';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { JourneyBar } from './components/JourneyBar';
@@ -18,13 +18,16 @@ import { HivStiPregnancyEmergencyModule } from './components/modules/HivStiPregn
 import { AskMamDrawer } from './components/AskMamDrawer';
 import { GlobalDangerAlert } from './components/GlobalDangerAlert';
 import { PrivacyModal } from './components/PrivacyModal';
+import { PolicyCenterModal } from './components/PolicyCenterModal';
+import { TranslationErrorReportModal } from './components/TranslationErrorReportModal';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
+import { offlineStorage } from './utils/offlineStorage';
 
 export default function App() {
   const [language, setLanguage] = useState<LanguageCode>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('mam_selected_lang');
-      if (saved === 'am' || saved === 'om' || saved === 'ti' || saved === 'en') {
+      const saved = localStorage.getItem('mam_selected_lang') as LanguageCode;
+      if (saved && AVAILABLE_LANGUAGES.some((l: LanguageConfig) => l.code === saved)) {
         return saved;
       }
     }
@@ -48,11 +51,40 @@ export default function App() {
     return false;
   });
 
-  const t = translations[language];
+  // Policy Center modal state
+  const [isPolicyCenterOpen, setIsPolicyCenterOpen] = useState<boolean>(false);
+  const [policyCenterSection, setPolicyCenterSection] = useState<string>('privacy');
+
+  // Translation error report modal state
+  const [isTranslationReportOpen, setIsTranslationReportOpen] = useState<boolean>(false);
+  const [translationReportSection, setTranslationReportSection] = useState<string>('General UI');
+
+  const t = translations[language] || translations.en;
+
+  const handleOpenPolicyCenter = (sectionId?: string) => {
+    setPolicyCenterSection(sectionId || 'privacy');
+    setIsPolicyCenterOpen(true);
+  };
 
   const handleLanguageChange = (newLang: LanguageCode) => {
     setLanguage(newLang);
-    localStorage.setItem('mam_selected_lang', newLang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('mam_selected_lang', newLang);
+      try {
+        offlineStorage.putItem('app_meta', {
+          key: 'selected_language',
+          code: newLang,
+          timestamp: Date.now(),
+        });
+      } catch (err) {
+        console.warn('Could not cache language choice into IndexedDB', err);
+      }
+    }
+  };
+
+  const handleOpenTranslationReport = (sectionName?: string) => {
+    setTranslationReportSection(sectionName || 'General UI');
+    setIsTranslationReportOpen(true);
   };
 
   const handleAskQuestionFromModule = (prompt: string) => {
@@ -67,13 +99,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-stone-900 flex flex-col font-sans selection:bg-[#F59E0B]/30 antialiased">
-      {/* 1. Header with Deep Blue Brand, Tagline, & Language Switcher */}
+      {/* 1. Header with Deep Blue Brand, Tagline, & Language Switcher with Status Labels */}
       <Header
         language={language}
         onLanguageChange={handleLanguageChange}
         onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
         onOpenDangerModal={() => handleTriggerDangerAlert('Emergency obstetric warning signs check')}
         onOpenEmergencyModule={() => setCurrentStage('emergency')}
+        onOpenTranslationReportModal={handleOpenTranslationReport}
+        onOpenPolicyCenter={handleOpenPolicyCenter}
       />
 
       {/* Offline Mode Alert Banner */}
@@ -140,6 +174,7 @@ export default function App() {
             language={language}
             onAskQuestion={handleAskQuestionFromModule}
             onTriggerDangerAlert={handleTriggerDangerAlert}
+            onOpenTranslationReportModal={handleOpenTranslationReport}
           />
         )}
       </main>
@@ -148,6 +183,8 @@ export default function App() {
       <Footer
         language={language}
         onOpenDangerModal={() => handleTriggerDangerAlert('Reviewing emergency symptoms')}
+        onOpenTranslationReportModal={handleOpenTranslationReport}
+        onOpenPolicyCenter={handleOpenPolicyCenter}
       />
 
       {/* 5. Floating "Ask MAM" Chat Button on Every Screen */}
@@ -192,6 +229,24 @@ export default function App() {
         isOpen={isPrivacyModalOpen}
         onClose={() => setIsPrivacyModalOpen(false)}
         language={language}
+        onOpenPolicyCenter={handleOpenPolicyCenter}
+      />
+
+      {/* 9. Comprehensive Policy Center Modal (9 Review-Ready Legal Templates) */}
+      <PolicyCenterModal
+        isOpen={isPolicyCenterOpen}
+        onClose={() => setIsPolicyCenterOpen(false)}
+        initialSectionId={policyCenterSection}
+        onOpenTranslationReportModal={handleOpenTranslationReport}
+        onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
+      />
+
+      {/* 10. Report a Translation Error Modal */}
+      <TranslationErrorReportModal
+        isOpen={isTranslationReportOpen}
+        onClose={() => setIsTranslationReportOpen(false)}
+        currentLanguage={language}
+        initialSection={translationReportSection}
       />
     </div>
   );

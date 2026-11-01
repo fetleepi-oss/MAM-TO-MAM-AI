@@ -1,0 +1,140 @@
+[
+  {
+    "id": "preg-8-contact-anc-schedule",
+    "title": "Ethiopian 8-Contact Antenatal Care (ANC) Model",
+    "language": "en",
+    "topic": "Pregnancy",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH) & WHO",
+    "sourceUrl": "https://www.who.int/publications/i/item/9789241549912",
+    "lastReviewedDate": "2025-10-25",
+    "reviewStatus": "approved",
+    "version": "2.2.0",
+    "summary": "Ethiopia adopted the WHO 8-contact antenatal model to ensure timely screening, fetal growth monitoring, and maternal complication prevention.",
+    "keyPoints": [
+      "Contact 1: Before 12 weeks of pregnancy (gestational dating, baseline lab tests, IFA initiation).",
+      "Contact 2: At 20 weeks (fetal anatomy ultrasound check, blood pressure check).",
+      "Contact 3: At 26 weeks; Contact 4: At 30 weeks; Contact 5: At 34 weeks.",
+      "Contacts 6, 7 & 8: At 36, 38, and 40 weeks (delivery planning, presentation check, danger sign vigilance)."
+    ],
+    "detailedContent": [
+      "The 8-contact ANC model replaces the outdated 4-visit schedule, providing maternal health teams continuous touchpoints to detect hypertensive disorders, gestational diabetes, severe anemia, and fetal distress.",
+      "In Ethiopia, Health Extension Workers register pregnant women at the household level and link them to Woreda Health Centers for clinical examinations and ultrasound services."
+    ],
+    "whenToSeeClinician": "Book your first ANC checkup before 12 weeks of pregnancy at your local Kebele Health Post or Health Center.",
+    "keywords": ["anc", "antenatal care", "8 contacts", "pregnancy schedule", "trimester", "ultrasound", "ifa", "fmoh anc"],
+    "ethiopiaContext": "Provided free of charge in all Ethiopian public primary healthcare units under the national maternal health mandate."
+  },
+  {
+    "id": "preg-danger-signs-protocol",
+    "title": "Critical Pregnancy Danger Signs & Emergency Triage",
+    "language": "en",
+    "topic": "Pregnancy",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH)",
+    "sourceUrl": "https://www.moh.gov.et/site/maternal-health-protocols",
+    "lastReviewedDate": "2026-01-15",
+    "reviewStatus": "approved",
+    "version": "2.0.0",
+    "summary": "Key obstetric warning signs requiring immediate emergency medical care: vaginal bleeding, severe headache with visual blur, and reduced fetal movement.",
+    "keyPoints": [
+      "Vaginal bleeding at any stage of pregnancy is an acute medical emergency.",
+      "Severe persistent headache, blurred vision, or sudden facial edema indicates pre-eclampsia.",
+      "Reduced or absent baby kicks (fewer than 10 kicks in 2 hours during third trimester) warrants immediate hospital assessment.",
+      "High fever, shivering, or foul-smelling amniotic fluid signals serious intrauterine infection."
+    ],
+    "detailedContent": [
+      "Obstetric danger signs cannot wait for scheduled clinic appointments. Waiting at home for symptoms to subside poses life-threatening hazards to mother and fetus.",
+      "Emergency transport can be mobilized in Ethiopia by calling 907 (Red Cross Ambulance) or 8335 (FMoH National Helpline)."
+    ],
+    "whenToSeeClinician": "Go immediately to the nearest hospital maternity ward or emergency department. Do not wait.",
+    "keywords": ["pregnancy danger signs", "vaginal bleeding", "pre-eclampsia", "headache", "blurred vision", "decreased kicks", "fetal movement"],
+    "ethiopiaContext": "Ambulance dispatch available via 907 (Red Cross) or 952 (Addis Ababa EMS) and free emergency triage at public hospitals."
+  },
+  {
+    "id": "preg-iron-folic-acid-ifa",
+    "title": "Daily Iron and Folic Acid (IFA) Supplementation",
+    "language": "en",
+    "topic": "Pregnancy",
+    "sourceOrganization": "World Health Organization (WHO) & UNICEF",
+    "sourceUrl": "https://www.who.int/tools/elena/interventions/daily-iron-pregnancy",
+    "lastReviewedDate": "2025-11-05",
+    "reviewStatus": "clinician-reviewed",
+    "version": "1.2.0",
+    "summary": "Daily oral iron (60mg elemental iron) and folic acid (400mcg) throughout pregnancy prevents maternal anemia, puerperal sepsis, and low birth weight.",
+    "keyPoints": [
+      "Take 1 tablet daily starting as early as possible in pregnancy.",
+      "Folic acid prevents neural tube defects (spina bifida); iron prevents severe maternal anemia and exhaustion.",
+      "Common side effects: dark-colored stool, mild nausea; take with food or before bedtime with water.",
+      "Avoid taking iron with tea, coffee, or milk which inhibit iron absorption; citrus juice (vitamin C) enhances absorption."
+    ],
+    "detailedContent": [
+      "Maternal anemia remains a major contributor to postpartum hemorrhage morbidity in Ethiopia.",
+      "The Ethiopian Federal Ministry of Health distributes free 90-day IFA blister packs to all pregnant women at ANC visits."
+    ],
+    "whenToSeeClinician": "Obtain your free IFA supply at your local Kebele Health Post or discuss non-constipating formulations if nausea occurs.",
+    "keywords": ["ifa", "iron", "folic acid", "anemia", "prenatal vitamins", "hemoglobin", "supplements", "pregnancy nutrition"],
+    "ethiopiaContext": "Supplied free at public health centers and community health posts throughout Ethiopia."
+  },
+  {
+    "id": "preg-gestational-diabetes-hypertension",
+    "title": "Gestational Diabetes & Hypertensive Screening Protocols",
+    "language": "en",
+    "topic": "Pregnancy",
+    "sourceOrganization": "Ethiopian Society of Obstetricians & Gynecologists (ESOG)",
+    "sourceUrl": "https://esog-ethiopia.org/clinical-guidelines",
+    "lastReviewedDate": "2026-02-18",
+    "reviewStatus": "draft",
+    "version": "0.7.0",
+    "summary": "Draft summary on oral glucose tolerance tests (OGTT) at 24 to 28 weeks and automated blood pressure monitoring during routine ANC visits.",
+    "keyPoints": [
+      "Gestational diabetes develops during pregnancy and increases risks of macrosomia (large baby) and birth trauma.",
+      "Screening with a 75g oral glucose tolerance test (OGTT) between 24 and 28 gestational weeks.",
+      "Gestational hypertension requires regular urine protein testing to differentiate from pre-eclampsia.",
+      "Dietary management and monitored physical activity form the first line of therapy."
+    ],
+    "detailedContent": [
+      "Draft clinical notes: Protocol standardization between tertiary referral hospitals and regional health centers is currently undergoing ESOG review.",
+      "Not yet ratified as unified national protocol across all tier-1 health centers."
+    ],
+    "whenToSeeClinician": "Ask your midwife or doctor about blood sugar and urine protein checks during your 24 to 28 week ANC check.",
+    "keywords": ["gestational diabetes", "ogtt", "blood sugar", "hypertension", "esog", "urine protein", "draft protocol"],
+    "ethiopiaContext": "Under review by the Ethiopian Society of Obstetricians & Gynecologists."
+  },
+  {
+    "id": "preg-positive-home-test",
+    "title": "Positive Home Pregnancy Test: Confirmation, ANC Initiation, and Care Options",
+    "language": "en",
+    "topic": "Pregnancy",
+    "sourceOrganization": "World Health Organization (WHO) & Ethiopian Federal Ministry of Health (FMoH)",
+    "sourceUrl": "https://www.who.int/publications/i/item/9789241549912",
+    "lastReviewedDate": "2026-01-22",
+    "reviewStatus": "approved",
+    "version": "2.1.0",
+    "summary": "A positive home urine pregnancy test detects human chorionic gonadotropin (hCG). Next steps include clinical confirmation to rule out ectopic pregnancy, initiating early antenatal care (ANC), and exploring compassionate options.",
+    "keyPoints": [
+      "Clinical Confirmation: Home urine tests detect hCG with high accuracy, but cannot rule out ectopic pregnancy (pregnancy outside the uterus). An in-person clinical exam or early ultrasound is recommended.",
+      "Early Prenatal Care: If you wish to continue the pregnancy, start daily Iron and Folic Acid (IFA) immediately and schedule Contact 1 of Ethiopia's 8-contact ANC model before 12 weeks.",
+      "Options Counseling: If the pregnancy is unintended or you are unsure, safe, confidential, non-judgmental options counseling is legally accessible in Ethiopia through Marie Stopes (helpline 8044), FGAE, and public health centers.",
+      "Healthy Habits: Avoid alcohol, tobacco, and unprescribed medications; stay hydrated and eat iron-rich foods."
+    ],
+    "detailedContent": [
+      "Finding out you are pregnant can bring mixed feelings. In Ethiopia, primary healthcare units provide confidential care whether you are continuing the pregnancy or seeking options counseling.",
+      "Early clinical confirmation checks maternal blood pressure, hemoglobin, and screens for asymptomatic conditions like bacteriuria and syphilis."
+    ],
+    "whenToSeeClinician": "Visit your local Kebele Health Post or Woreda Health Center within 1-2 weeks for ultrasound confirmation and ANC registration, or call Marie Stopes toll-free at 8044 for confidential options counseling.",
+    "keywords": [
+      "positive pregnancy test",
+      "home pregnancy test",
+      "positive test",
+      "pregnant test",
+      "unsure what to do",
+      "early pregnancy",
+      "urine test",
+      "missed period positive",
+      "positive home pregnancy test",
+      "የእርግዝና መመርመሪያ",
+      "እርግዝና"
+    ],
+    "ethiopiaContext": "Free ANC and IFA at all Ethiopian public health centers; confidential options counseling via Marie Stopes helpline 8044."
+  }
+]
+

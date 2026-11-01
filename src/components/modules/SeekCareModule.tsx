@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PhoneCall,
   MapPin,
@@ -10,9 +10,13 @@ import {
   Building2,
   Stethoscope,
   ChevronRight,
+  Bookmark,
+  BookmarkCheck,
 } from 'lucide-react';
-import { LanguageCode, TriageSurveyAnswers, TriageAssessmentResult } from '../../types/srmh';
+import { LanguageCode, TriageSurveyAnswers, TriageAssessmentResult, HealthFacility } from '../../types/srmh';
 import { ETHIOPIAN_MOCK_FACILITIES } from '../../data/srmhData';
+import { TranslationPendingBanner } from '../TranslationPendingBanner';
+import { offlineStorage } from '../../utils/offlineStorage';
 
 interface SeekCareModuleProps {
   language: LanguageCode;
@@ -34,6 +38,30 @@ export const SeekCareModule: React.FC<SeekCareModuleProps> = ({
 
   // Facility filter
   const [selectedRegion, setSelectedRegion] = useState<string>('All Regions');
+  const [savedFacilityIds, setSavedFacilityIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function loadSavedFacilities() {
+      try {
+        const saved = await offlineStorage.getSavedFacilities();
+        setSavedFacilityIds(saved.map((f) => f.id));
+      } catch (err) {
+        console.warn('Could not load saved facilities', err);
+      }
+    }
+    loadSavedFacilities();
+  }, []);
+
+  const handleToggleSaveFacility = async (fac: HealthFacility) => {
+    const isCurrentlySaved = savedFacilityIds.includes(fac.id);
+    if (isCurrentlySaved) {
+      await offlineStorage.removeSavedFacility(fac.id);
+      setSavedFacilityIds((prev) => prev.filter((id) => id !== fac.id));
+    } else {
+      await offlineStorage.saveFacility(fac);
+      setSavedFacilityIds((prev) => [...prev, fac.id]);
+    }
+  };
 
   // Answers State
   const [answers, setAnswers] = useState<TriageSurveyAnswers>({
@@ -383,9 +411,12 @@ Disclaimer: Educational content based on WHO and Ministry of Health materials, p
   const currentQ = QUESTIONS[currentStep];
   const progressPercent = Math.round(((currentStep + 1) / QUESTIONS.length) * 100);
 
-  const filteredFacilities = selectedRegion === 'All Regions'
-    ? ETHIOPIAN_MOCK_FACILITIES
-    : ETHIOPIAN_MOCK_FACILITIES.filter((f) => f.region === selectedRegion);
+  const filteredFacilities =
+    selectedRegion === 'Saved Facilities'
+      ? ETHIOPIAN_MOCK_FACILITIES.filter((f) => savedFacilityIds.includes(f.id))
+      : selectedRegion === 'All Regions'
+      ? ETHIOPIAN_MOCK_FACILITIES
+      : ETHIOPIAN_MOCK_FACILITIES.filter((f) => f.region === selectedRegion);
 
   return (
     <div className="space-y-6">
@@ -436,6 +467,12 @@ Disclaimer: Educational content based on WHO and Ministry of Health materials, p
           </div>
         )}
       </div>
+
+      {/* Clinical Review Status Guard: Triage & Facilities */}
+      <TranslationPendingBanner
+        language={language}
+        moduleName="Clinical Triage & Health Facilities"
+      />
 
       {/* 1. TRIAGE QUESTIONNAIRE STEPPER (If not completed) */}
       {!hasCompletedTriage ? (
@@ -780,6 +817,18 @@ Disclaimer: Educational content based on WHO and Ministry of Health materials, p
 
           {/* Region Filter */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <button
+              type="button"
+              onClick={() => setSelectedRegion('Saved Facilities')}
+              className={`text-xs px-3 py-1.5 rounded-xl font-bold transition-all shrink-0 cursor-pointer min-h-[36px] flex items-center gap-1.5 ${
+                selectedRegion === 'Saved Facilities'
+                  ? 'bg-[#F59E0B] text-[#1F3B8C] shadow-xs'
+                  : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200'
+              }`}
+            >
+              <BookmarkCheck className="w-3.5 h-3.5 text-[#1F3B8C]" />
+              <span>Saved ({savedFacilityIds.length})</span>
+            </button>
             {REGIONS.map((reg) => (
               <button
                 key={reg}
@@ -798,22 +847,38 @@ Disclaimer: Educational content based on WHO and Ministry of Health materials, p
 
         {/* Facility Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-          {filteredFacilities.map((fac) => (
-            <div
-              key={fac.id}
-              className="p-4 rounded-3xl border border-stone-200 bg-stone-50/60 hover:bg-white transition-all flex flex-col justify-between space-y-3"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-1 mb-1">
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-[#1F3B8C]">
-                    {fac.region}
-                  </span>
-                  {fac.isYouthFriendly && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                      Youth-Friendly
+          {filteredFacilities.map((fac) => {
+            const isSaved = savedFacilityIds.includes(fac.id);
+            return (
+              <div
+                key={fac.id}
+                className="p-4 rounded-3xl border border-stone-200 bg-stone-50/60 hover:bg-white transition-all flex flex-col justify-between space-y-3"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-[#1F3B8C]">
+                      {fac.region}
                     </span>
-                  )}
-                </div>
+                    <div className="flex items-center gap-1.5">
+                      {fac.isYouthFriendly && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                          Youth-Friendly
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleToggleSaveFacility(fac)}
+                        className={`p-1.5 rounded-xl transition-colors cursor-pointer ${
+                          isSaved
+                            ? 'text-[#F59E0B] bg-amber-50 hover:bg-amber-100'
+                            : 'text-stone-400 hover:text-stone-700 hover:bg-stone-100'
+                        }`}
+                        title={isSaved ? 'Saved in IndexedDB (Click to unsave)' : 'Save facility to offline IndexedDB'}
+                      >
+                        {isSaved ? <BookmarkCheck className="w-4 h-4 text-[#F59E0B]" /> : <Bookmark className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
 
                 <h4 className="font-extrabold text-stone-900 text-sm">
                   {fac.name}
@@ -871,7 +936,8 @@ Disclaimer: Educational content based on WHO and Ministry of Health materials, p
                 )}
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       </div>
     </div>

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "mens-normal-cycle-parameters",
+    "title": "Normal Menstrual Cycle Length & Hormonal Physiology",
+    "language": "en",
+    "topic": "Menstrual Health",
+    "sourceOrganization": "World Health Organization (WHO) & International Federation of Gynecology and Obstetrics (FIGO)",
+    "sourceUrl": "https://www.who.int/news-room/fact-sheets/detail/menstruation",
+    "lastReviewedDate": "2025-10-14",
+    "reviewStatus": "approved",
+    "version": "2.0.0",
+    "summary": "Clinical parameters defining a healthy menstrual cycle: 21 to 35 days duration, bleeding lasting 2 to 7 days, and normal blood loss.",
+    "keyPoints": [
+      "Normal cycle frequency: Between 21 and 35 days (measured from day 1 of one period to day 1 of the next).",
+      "Normal flow duration: Bleeding typically lasts 3 to 7 days; soaking 3 to 6 pads or tampons per day.",
+      "Ovulation (egg release) typically occurs 14 days before the onset of the next period.",
+      "Adolescent cycles in the first 1 to 2 years after menarche are frequently irregular due to maturing hypothalamic-pituitary-ovarian axis."
+    ],
+    "detailedContent": [
+      "Menstruation is a healthy biological rhythm governed by cyclic rises and falls of estrogen and progesterone.",
+      "Understanding personal cycle variability empowers women to track fertility windows, identify unexpected bleeding early, and plan family goals."
+    ],
+    "whenToSeeClinician": "Consult a healthcare provider if your cycle is shorter than 21 days, longer than 35 days, or if bleeding lasts longer than 8 consecutive days.",
+    "keywords": ["menstrual cycle", "period length", "ovulation", "cycle days", "estrogen", "progesterone", "menarche", "normal period"],
+    "ethiopiaContext": "Educational materials disseminated by the Ethiopian School Health and Nutrition Directorate."
+  },
+  {
+    "id": "mens-dysmenorrhea-severe-cramps",
+    "title": "Severe Menstrual Cramps (Dysmenorrhea) & Treatment",
+    "language": "en",
+    "topic": "Menstrual Health",
+    "sourceOrganization": "Ethiopian Society of Obstetricians & Gynecologists (ESOG)",
+    "sourceUrl": "https://esog-ethiopia.org/dysmenorrhea-guidelines",
+    "lastReviewedDate": "2025-11-20",
+    "reviewStatus": "approved",
+    "version": "1.3.0",
+    "summary": "Primary dysmenorrhea causes painful pelvic and back cramping due to uterine prostaglandins, responsive to NSAIDs, heat therapy, and hormonal regulation.",
+    "keyPoints": [
+      "Prostaglandins cause the uterine muscle to contract and shed its lining; high levels produce intense cramping, nausea, and fatigue.",
+      "Non-steroidal anti-inflammatory drugs (NSAIDs like Ibuprofen or Mefenamic Acid) block prostaglandin synthesis most effectively when started at the very first sign of cramps.",
+      "Warm compresses or heating pads placed over the lower abdomen relax uterine smooth muscle equivalent to mild analgesics.",
+      "Secondary dysmenorrhea (caused by endometriosis, adenomyosis, or fibroids) causes chronic pain that worsens over time."
+    ],
+    "detailedContent": [
+      "Severe cramps that cause school absenteeism or incapacitation are NOT something a young woman must simply endure in silence.",
+      "Combined oral contraceptive pills or hormonal IUDs significantly alleviate dysmenorrhea by thinning the endometrium and suppressing prostaglandin production."
+    ],
+    "whenToSeeClinician": "Visit a health center or gynecologist if cramps do not respond to over-the-counter painkillers or if pain occurs during non-menstrual weeks or intercourse.",
+    "keywords": ["cramps", "dysmenorrhea", "period pain", "ibuprofen", "menstrual pain", "endometriosis", "pelvic cramps"],
+    "ethiopiaContext": "Addressed in adolescent and youth-friendly services across Ethiopian high schools and universities."
+  },
+  {
+    "id": "mens-missed-period-causes",
+    "title": "Causes of Missed or Irregular Periods (Amenorrhea)",
+    "language": "en",
+    "topic": "Menstrual Health",
+    "sourceOrganization": "World Health Organization (WHO) & UNFPA",
+    "sourceUrl": "https://www.who.int/reproductivehealth/topics/infertility/definitions/en/",
+    "lastReviewedDate": "2025-12-08",
+    "reviewStatus": "clinician-reviewed",
+    "version": "1.2.0",
+    "summary": "Explores the spectrum of factors causing absent or late periods, including early pregnancy, hormonal birth control, physical/emotional stress, and PCOS.",
+    "keyPoints": [
+      "Pregnancy is the most common cause of sudden missed period in sexually active women.",
+      "Hormonal methods (implants like Implanon, 3-month Depo-Provera injectables) often cause periods to become very light or pause completely without health risk.",
+      "Acute mental stress, severe caloric restriction, intensive athletics, or rapid weight shifts disrupt pituitary hormonal signals.",
+      "Polycystic Ovary Syndrome (PCOS) and thyroid disorders frequently present with irregular or skipped cycles."
+    ],
+    "detailedContent": [
+      "Amenorrhea is categorized as primary (no period by age 15) or secondary (absence of menses for 3 months in someone who previously had periods).",
+      "Taking an over-the-counter urine pregnancy test is the essential first clinical step for sexually active individuals."
+    ],
+    "whenToSeeClinician": "Take a home urine pregnancy test if your period is more than 7 days late. Visit a health center if your period is absent for 3 consecutive months.",
+    "keywords": ["missed period", "late period", "amenorrhea", "irregular cycle", "pcos", "stress and period", "depo period stop"],
+    "ethiopiaContext": "Confidential counseling and pregnancy testing provided free at all Kebele Health Posts in Ethiopia."
+  },
+  {
+    "id": "mens-reusable-cups-school-pilot",
+    "title": "Reusable Medical-Grade Menstrual Cups in Schools Pilot",
+    "language": "en",
+    "topic": "Menstrual Health",
+    "sourceOrganization": "UNICEF Ethiopia & Ministry of Education",
+    "sourceUrl": "https://www.unicef.org/ethiopia/reports/menstrual-health-and-hygiene-schools",
+    "lastReviewedDate": "2026-02-17",
+    "reviewStatus": "draft",
+    "version": "0.6.0",
+    "summary": "Draft assessment of medical-grade silicone menstrual cup distribution and boiling hygiene protocols in primary and secondary schools.",
+    "keyPoints": [
+      "Medical-grade silicone menstrual cups collect rather than absorb menstrual fluid, lasting up to 5 to 10 years.",
+      "Provides up to 10-12 hours of leak-free protection, reducing school absenteeism among adolescent girls.",
+      "Requires access to clean water and boiling water for sterilization between cycles.",
+      "Acceptability and peer-educator training modules currently in field trial phase."
+    ],
+    "detailedContent": [
+      "Draft clinical notes: Hygiene safety monitoring and toxic shock syndrome surveillance protocols for school-based WASH interventions.",
+      "Collaborative pilot project between UNICEF Ethiopia, Ministry of Education, and regional water bureaus."
+    ],
+    "whenToSeeClinician": "Speak to your school health club coordinator or health extension worker regarding proper sterilization techniques.",
+    "keywords": ["menstrual cup", "reusable pads", "menstrual hygiene", "wash in schools", "unicef ethiopia", "draft menstrual"],
+    "ethiopiaContext": "Piloted across select primary and secondary schools in pastoralist and agrarian woredas in Ethiopia."
+  }
+]

@@ -29,6 +29,8 @@ import {
   GUIDED_QUESTIONNAIRES,
   REGIONAL_CARE_FACILITIES
 } from '../data/emergencyAndHivData';
+import { MASTER_CONTENT_LIBRARY } from '../data/content/index';
+import { translations } from '../data/translations/index';
 
 interface OfflineManagerProps {
   onSimulateOfflineChange?: (isOffline: boolean) => void;
@@ -65,6 +67,8 @@ export const OfflineManager: React.FC<OfflineManagerProps> = ({ onSimulateOfflin
             facilities: [...ETHIOPIAN_MOCK_FACILITIES, ...REGIONAL_CARE_FACILITIES],
             hivStiModules: COMPREHENSIVE_HEALTH_SECTIONS,
             timeSensitiveEmergencies: TIME_SENSITIVE_EMERGENCIES,
+            languagePacks: translations,
+            contentLibrary: MASTER_CONTENT_LIBRARY,
           });
           setCacheMeta({
             key: 'last_cache_sync',
@@ -113,6 +117,8 @@ export const OfflineManager: React.FC<OfflineManagerProps> = ({ onSimulateOfflin
         facilities: [...ETHIOPIAN_MOCK_FACILITIES, ...REGIONAL_CARE_FACILITIES],
         hivStiModules: COMPREHENSIVE_HEALTH_SECTIONS,
         timeSensitiveEmergencies: TIME_SENSITIVE_EMERGENCIES,
+        languagePacks: translations,
+        contentLibrary: MASTER_CONTENT_LIBRARY,
       });
 
       const updatedMeta: CacheMetadata = {

@@ -24,7 +24,10 @@ import {
   Bell,
   HelpCircle,
   Eye,
-  EyeOff
+  EyeOff,
+  Flag,
+  Bookmark,
+  BookmarkCheck
 } from 'lucide-react';
 import { LanguageCode } from '../../types/srmh';
 import {
@@ -37,13 +40,17 @@ import {
   GuidedQuestionnaire,
   CareFacilityEntry,
 } from '../../data/emergencyAndHivData';
+import { MASTER_CONTENT_LIBRARY, ContentEntry } from '../../data/content/index';
 import { offlineStorage, HealthReminder } from '../../utils/offlineStorage';
+import { TranslationPendingBanner } from '../TranslationPendingBanner';
+import { isLanguageClinicalReviewed } from '../../data/translations/index';
 
 interface HivStiPregnancyEmergencyModuleProps {
   language: LanguageCode;
   initialTab?: 'guides' | 'emergencies' | 'triage' | 'locator' | 'reminders' | 'provider_checklist';
   onAskQuestion: (prompt: string) => void;
   onTriggerDangerAlert: (reason: string) => void;
+  onOpenTranslationReportModal?: (sectionName?: string) => void;
 }
 
 export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyModuleProps> = ({
@@ -51,11 +58,15 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
   initialTab = 'emergencies',
   onAskQuestion,
   onTriggerDangerAlert,
+  onOpenTranslationReportModal,
 }) => {
+  const isReviewed = isLanguageClinicalReviewed(language);
   const [activeTab, setActiveTab] = useState<'guides' | 'emergencies' | 'triage' | 'locator' | 'reminders' | 'provider_checklist'>(initialTab);
 
-  // Filter for guides
-  const [guideCategory, setGuideCategory] = useState<'all' | 'hiv' | 'stis' | 'pregnancy' | 'emergencies'>('all');
+  // Filter for Content Library (all 7 topics)
+  const [guideTopic, setGuideTopic] = useState<'all' | 'hiv' | 'stis' | 'pregnancy' | 'postnatal' | 'contraception' | 'emergencies' | 'menstrual_health'>('all');
+  const [guideStatusFilter, setGuideStatusFilter] = useState<'all' | 'approved' | 'clinician-reviewed' | 'draft'>('all');
+  const [expandedContentId, setExpandedContentId] = useState<string | null>('hiv_pep_emergency_72h');
   const [expandedSectionId, setExpandedSectionId] = useState<string | null>('pep_72h');
   const [searchFilter, setSearchFilter] = useState('');
 
@@ -86,29 +97,60 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
     pregnancy_weeks: false,
   });
 
-  // Load reminders from offline storage on mount
+  const [savedFacilityIds, setSavedFacilityIds] = useState<string[]>([]);
+
+  // Load reminders & saved facilities from offline storage on mount
   useEffect(() => {
-    async function loadOfflineReminders() {
+    async function loadOfflineData() {
       try {
         const loaded = await offlineStorage.getReminders();
         setReminders(loaded);
       } catch (err) {
         console.warn('Could not load offline reminders', err);
       }
+      try {
+        const saved = await offlineStorage.getSavedFacilities();
+        setSavedFacilityIds(saved.map((f) => f.id));
+      } catch (err) {
+        console.warn('Could not load saved facilities', err);
+      }
     }
-    loadOfflineReminders();
+    loadOfflineData();
   }, []);
+
+  const handleToggleSaveFacility = async (fac: CareFacilityEntry) => {
+    const isCurrentlySaved = savedFacilityIds.includes(fac.id);
+    if (isCurrentlySaved) {
+      await offlineStorage.removeSavedFacility(fac.id);
+      setSavedFacilityIds((prev) => prev.filter((id) => id !== fac.id));
+    } else {
+      await offlineStorage.saveFacility(fac as any);
+      setSavedFacilityIds((prev) => [...prev, fac.id]);
+    }
+  };
 
   const handleCreateReminder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!reminderTitle || !reminderDate) return;
+    // Enforce discretion: automatically sanitize titles so sensitive terms (HIV, STI, pregnancy) never appear
+    let sanitizedTitle = reminderTitle.trim();
+    const sensitiveWords = [/hiv/gi, /sti/gi, /syphilis/gi, /gonorrhea/gi, /pregnancy/gi, /pregnant/gi, /pep/gi, /prep/gi, /abortion/gi];
+    for (const pattern of sensitiveWords) {
+      sanitizedTitle = sanitizedTitle.replace(pattern, 'Care');
+    }
+    sanitizedTitle = sanitizedTitle.replace(/\s+/g, ' ').trim();
+    if (!sanitizedTitle) sanitizedTitle = 'Scheduled Health Check-in';
+
+    let sanitizedNotes = reminderNotes.trim();
+    for (const pattern of sensitiveWords) {
+      sanitizedNotes = sanitizedNotes.replace(pattern, 'Care');
+    }
 
     const newReminder: HealthReminder = {
       id: `rem_${Date.now()}`,
       type: reminderType,
-      title: reminderTitle,
+      title: sanitizedTitle,
       dueDate: reminderDate,
-      notes: reminderNotes,
+      notes: sanitizedNotes,
       completed: false,
       createdAt: Date.now(),
     };
@@ -180,7 +222,10 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
 
   // Filter facilities
   const filteredFacilities = REGIONAL_CARE_FACILITIES.filter((f) => {
-    const matchRegion = selectedRegion === 'All Regions' || f.region === selectedRegion;
+    const matchRegion =
+      selectedRegion === 'Saved Facilities'
+        ? savedFacilityIds.includes(f.id)
+        : selectedRegion === 'All Regions' || f.region === selectedRegion;
     const matchService =
       serviceFilter === 'all' ||
       (serviceFilter === 'yfs' && f.isYouthFriendly) ||
@@ -241,6 +286,13 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
           </span>
         </div>
       </div>
+
+      {/* Clinical Review Status Guard: HIV, STI, Pregnancy & Emergency content */}
+      <TranslationPendingBanner
+        language={language}
+        moduleName="HIV, STI, Pregnancy & Emergency"
+        onOpenReportModal={onOpenTranslationReportModal}
+      />
 
       {/* Module Navigation Tabs */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none border-b border-stone-200">
@@ -325,6 +377,22 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
                   <h3 className="font-extrabold text-base text-[#1F3B8C] leading-tight mb-1">
                     {em.title}
                   </h3>
+
+                  {!isReviewed && (
+                    <div className="mb-2.5 p-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-[11px] font-semibold flex items-center justify-between gap-1">
+                      <span>⚠️ Translation pending clinical review • Showing verified English</span>
+                      {onOpenTranslationReportModal && (
+                        <button
+                          type="button"
+                          onClick={() => onOpenTranslationReportModal(`Emergency: ${em.title}`)}
+                          className="text-[10px] text-[#1F3B8C] font-bold underline hover:text-blue-900 shrink-0 cursor-pointer"
+                        >
+                          Report error
+                        </button>
+                      )}
+                    </div>
+                  )}
+
                   <p className="text-xs font-bold text-red-700 bg-red-50 p-2 rounded-xl mb-3 border border-red-100">
                     {em.headline}
                   </p>
@@ -435,6 +503,21 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
               <p className="text-xs text-stone-600 mt-0.5">
                 {currentQuestionnaire.description}
               </p>
+
+              {!isReviewed && (
+                <div className="mt-3 p-2.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-xs font-semibold flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <span>⚠️ Triage questions pending clinical review. Displaying certified English protocol.</span>
+                  {onOpenTranslationReportModal && (
+                    <button
+                      type="button"
+                      onClick={() => onOpenTranslationReportModal(`Triage: ${currentQuestionnaire.title}`)}
+                      className="text-[11px] text-[#1F3B8C] font-bold underline shrink-0 cursor-pointer self-start sm:self-auto"
+                    >
+                      Report error
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Questions list */}
@@ -573,26 +656,76 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
         </div>
       )}
 
-      {/* TAB 3: REVIEWED HEALTH LIBRARY */}
+      {/* TAB 3: STRUCTURED JSON CONTENT LIBRARY (ALL 7 TOPICS) */}
       {activeTab === 'guides' && (
         <div className="space-y-4">
-          {/* Category filter pills & search */}
+          {/* Header Description */}
+          <div className="p-4 bg-blue-50/70 border border-blue-200/80 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="text-xs font-black text-[#1F3B8C] flex items-center gap-1.5">
+                <FileText className="w-4 h-4 text-[#F59E0B]" />
+                <span>Verified Topic Content Library (7 JSON Clinical Archives)</span>
+                <span className="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full">
+                  Indexed & Offline-Cached
+                </span>
+              </div>
+              <p className="text-[11px] text-stone-600 mt-0.5">
+                Each topic is version-controlled, source-attributed, and categorized as <strong>Approved</strong>, <strong>Clinician-Reviewed</strong>, or <strong>Draft</strong>.
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-stone-500">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Approved First
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 ml-1.5" /> Clinician-Reviewed
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 ml-1.5" /> Draft
+            </div>
+          </div>
+
+          {/* 7 Topics Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            {[
+              { key: 'all', label: 'All 7 Topics', count: MASTER_CONTENT_LIBRARY.length },
+              { key: 'hiv', label: 'HIV', count: MASTER_CONTENT_LIBRARY.filter(e => e.topic === 'HIV').length },
+              { key: 'stis', label: 'STIs', count: MASTER_CONTENT_LIBRARY.filter(e => e.topic === 'STIs').length },
+              { key: 'pregnancy', label: 'Pregnancy', count: MASTER_CONTENT_LIBRARY.filter(e => e.topic === 'Pregnancy').length },
+              { key: 'postnatal', label: 'Postnatal', count: MASTER_CONTENT_LIBRARY.filter(e => e.topic === 'Postnatal').length },
+              { key: 'contraception', label: 'Contraception', count: MASTER_CONTENT_LIBRARY.filter(e => e.topic === 'Contraception').length },
+              { key: 'emergencies', label: 'Emergencies', count: MASTER_CONTENT_LIBRARY.filter(e => e.topic === 'Emergencies').length },
+              { key: 'menstrual_health', label: 'Menstrual Health', count: MASTER_CONTENT_LIBRARY.filter(e => e.topic === 'Menstrual Health').length },
+            ].map(({ key, label, count }) => (
+              <button
+                key={key}
+                onClick={() => setGuideTopic(key as any)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap cursor-pointer transition-all flex items-center gap-1.5 ${
+                  guideTopic === key
+                    ? 'bg-[#1F3B8C] text-white shadow-xs'
+                    : 'bg-stone-100 hover:bg-stone-200 text-stone-700'
+                }`}
+              >
+                <span>{label}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${guideTopic === key ? 'bg-[#F59E0B] text-[#1F3B8C]' : 'bg-stone-200 text-stone-700'}`}>
+                  {count}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* Secondary filter: Review Status & Search bar */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 scrollbar-none">
+              <span className="text-[11px] font-bold text-stone-500 mr-1">Status:</span>
               {[
-                { key: 'all', label: 'All Topics' },
-                { key: 'hiv', label: 'HIV (Transmission, PrEP, PEP, PMTCT)' },
-                { key: 'stis', label: 'STIs & Partner Treatment' },
-                { key: 'pregnancy', label: 'Pregnancy & 8 ANC Visits' },
-                { key: 'emergencies', label: 'Obstetric Emergencies' },
+                { key: 'all', label: 'All Statuses' },
+                { key: 'approved', label: 'Approved Only' },
+                { key: 'clinician-reviewed', label: 'Clinician-Reviewed' },
+                { key: 'draft', label: 'Drafts' },
               ].map(({ key, label }) => (
                 <button
                   key={key}
-                  onClick={() => setGuideCategory(key as any)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap cursor-pointer transition-all ${
-                    guideCategory === key
-                      ? 'bg-[#1F3B8C] text-white shadow-xs'
-                      : 'bg-stone-100 hover:bg-stone-200 text-stone-700'
+                  onClick={() => setGuideStatusFilter(key as any)}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap cursor-pointer transition-all ${
+                    guideStatusFilter === key
+                      ? 'bg-stone-800 text-white'
+                      : 'bg-stone-100 hover:bg-stone-200 text-stone-600'
                   }`}
                 >
                   {label}
@@ -600,11 +733,11 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
               ))}
             </div>
 
-            <div className="relative w-full sm:w-64">
+            <div className="relative w-full sm:w-72">
               <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-2.5" />
               <input
                 type="text"
-                placeholder="Search topics, PEP, ANC..."
+                placeholder="Search across all 7 topic JSON files..."
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
                 className="w-full pl-8 pr-3 py-1.5 bg-stone-50 border border-stone-200 rounded-xl text-xs outline-hidden focus:border-[#1F3B8C]"
@@ -612,104 +745,227 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
             </div>
           </div>
 
-          {/* Sections List */}
+          {/* JSON Content Entries List with Approved First sorting */}
           <div className="space-y-3">
-            {COMPREHENSIVE_HEALTH_SECTIONS.filter((s) => {
-              const matchCat = guideCategory === 'all' || s.category === guideCategory;
-              const matchQuery =
-                !searchFilter ||
-                s.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                s.summary.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                s.keyPoints.some((kp) => kp.toLowerCase().includes(searchFilter.toLowerCase()));
-              return matchCat && matchQuery;
-            }).map((sec) => {
-              const isExpanded = expandedSectionId === sec.id;
-              return (
-                <div
-                  key={sec.id}
-                  className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200 shadow-xs hover:border-stone-300 transition-all"
-                >
+            {MASTER_CONTENT_LIBRARY
+              .filter((entry) => {
+                // Topic filter
+                if (guideTopic !== 'all') {
+                  const topicMap: Record<string, string> = {
+                    hiv: 'HIV',
+                    stis: 'STIs',
+                    pregnancy: 'Pregnancy',
+                    postnatal: 'Postnatal',
+                    contraception: 'Contraception',
+                    emergencies: 'Emergencies',
+                    menstrual_health: 'Menstrual Health',
+                  };
+                  if (entry.topic !== topicMap[guideTopic]) return false;
+                }
+
+                // Review status filter
+                if (guideStatusFilter !== 'all' && entry.reviewStatus !== guideStatusFilter) {
+                  return false;
+                }
+
+                // Search query filter
+                if (searchFilter) {
+                  const q = searchFilter.toLowerCase();
+                  const inTitle = entry.title.toLowerCase().includes(q);
+                  const inSummary = entry.summary ? entry.summary.toLowerCase().includes(q) : false;
+                  const inOrg = entry.sourceOrganization.toLowerCase().includes(q);
+                  const inKeywords = entry.keywords ? entry.keywords.some((k) => k.toLowerCase().includes(q)) : false;
+                  if (!inTitle && !inSummary && !inOrg && !inKeywords) return false;
+                }
+
+                return true;
+              })
+              .sort((a, b) => {
+                // Approved first, then clinician-reviewed, then draft
+                const score = (st: string) => (st === 'approved' ? 3 : st === 'clinician-reviewed' ? 2 : 1);
+                return score(b.reviewStatus) - score(a.reviewStatus);
+              })
+              .map((entry) => {
+                const isExpanded = expandedContentId === entry.id;
+                return (
                   <div
-                    onClick={() => setExpandedSectionId(isExpanded ? null : sec.id)}
-                    className="flex items-start justify-between gap-3 cursor-pointer select-none"
+                    key={entry.id}
+                    className={`bg-white rounded-3xl p-4 sm:p-5 border transition-all ${
+                      entry.reviewStatus === 'approved'
+                        ? 'border-emerald-200/80 shadow-xs hover:border-emerald-400'
+                        : entry.reviewStatus === 'clinician-reviewed'
+                        ? 'border-blue-200/80 shadow-xs hover:border-blue-400'
+                        : 'border-amber-200/80 bg-amber-50/20 shadow-xs hover:border-amber-400'
+                    }`}
                   >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-100 text-[#1F3B8C]">
-                          {sec.category.toUpperCase()}
-                        </span>
-                        <span className="text-[10px] font-semibold text-stone-400">
-                          {sec.sourceTag}
-                        </span>
-                      </div>
-                      <h3 className="font-extrabold text-sm sm:text-base text-[#1F3B8C]">
-                        {language === 'am' ? sec.titleAm : language === 'om' ? sec.titleOm : language === 'ti' ? sec.titleTi : sec.title}
-                      </h3>
-                      <p className="text-xs text-stone-600 line-clamp-2">
-                        {sec.summary}
-                      </p>
-                    </div>
-
-                    <button
-                      aria-label="Toggle section"
-                      className="p-1.5 rounded-full bg-stone-100 text-stone-600 shrink-0"
+                    <div
+                      onClick={() => setExpandedContentId(isExpanded ? null : entry.id)}
+                      className="flex items-start justify-between gap-3 cursor-pointer select-none"
                     >
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </button>
-                  </div>
+                      <div className="space-y-1 w-full">
+                        <div className="flex flex-wrap items-center gap-2">
+                          {/* Topic Pill */}
+                          <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-stone-100 text-[#1F3B8C]">
+                            {entry.topic}
+                          </span>
 
-                  {isExpanded && (
-                    <div className="mt-4 pt-4 border-t border-stone-100 space-y-4 text-xs text-stone-700 animate-fadeIn">
-                      <div>
-                        <div className="font-black text-[#1F3B8C] uppercase text-[11px] mb-2">Key Clinical Takeaways:</div>
-                        <ul className="space-y-1.5">
-                          {sec.keyPoints.map((kp, idx) => (
-                            <li key={idx} className="flex items-start gap-2">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                              <span className="leading-relaxed">{kp}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                          {/* Review Status Badge */}
+                          {entry.reviewStatus === 'approved' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                              Approved
+                            </span>
+                          )}
+                          {entry.reviewStatus === 'clinician-reviewed' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-blue-100 text-[#1F3B8C] flex items-center gap-1">
+                              <ShieldCheck className="w-3 h-3 text-blue-600" />
+                              Clinician-Reviewed
+                            </span>
+                          )}
+                          {entry.reviewStatus === 'draft' && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
+                              <AlertTriangle className="w-3 h-3 text-amber-600" />
+                              Not yet reviewed
+                            </span>
+                          )}
 
-                      <div className="bg-stone-50 p-3.5 rounded-2xl border border-stone-200 space-y-2">
-                        <div className="font-black text-stone-900 text-[11px]">Detailed Medical Context:</div>
-                        {sec.detailedContent.map((para, pIdx) => (
-                          <p key={pIdx} className="leading-relaxed text-stone-600">
-                            {para}
+                          {/* Version Tag */}
+                          <span className="text-[10px] font-mono text-stone-400 font-medium">
+                            {entry.version}
+                          </span>
+
+                          {/* Last Reviewed Date */}
+                          <span className="text-[10px] text-stone-400 flex items-center gap-1 ml-auto">
+                            <Clock className="w-3 h-3" />
+                            Reviewed: {entry.lastReviewedDate}
+                          </span>
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="font-extrabold text-sm sm:text-base text-[#1F3B8C] pt-1">
+                          {entry.title}
+                        </h3>
+
+                        {/* Language pending review guard */}
+                        {!isReviewed && (
+                          <div className="my-1.5 p-1.5 rounded-lg bg-amber-50 border border-amber-300 text-amber-950 text-[10px] font-semibold flex items-center justify-between gap-1">
+                            <span>⚠️ Translation pending review • Showing verified English</span>
+                            {onOpenTranslationReportModal && (
+                              <span
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onOpenTranslationReportModal(`Library: ${entry.title}`);
+                                }}
+                                className="text-[#1F3B8C] font-bold underline hover:text-blue-900 cursor-pointer"
+                              >
+                                Report
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Summary */}
+                        {entry.summary && (
+                          <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                            {entry.summary}
                           </p>
-                        ))}
+                        )}
+
+                        {/* Source Organization Name Under Answer */}
+                        <div className="text-[11px] text-stone-500 font-medium flex items-center gap-1 pt-0.5">
+                          <span>Source:</span>
+                          <span className="font-bold text-[#1F3B8C]">{entry.sourceOrganization}</span>
+                        </div>
                       </div>
 
-                      {sec.stigmaFreeNote && (
-                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 text-[11px]">
-                          <strong>Stigma-Free Care:</strong> {sec.stigmaFreeNote}
-                        </div>
-                      )}
-
-                      {sec.confidentialityNote && (
-                        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-[11px]">
-                          <strong>Confidentiality Rights:</strong> {sec.confidentialityNote}
-                        </div>
-                      )}
-
-                      <div className="flex items-center justify-between pt-2">
-                        <span className="text-[11px] text-stone-500 font-medium">
-                          {sec.sourceTag}
-                        </span>
-                        <button
-                          onClick={() => onAskQuestion(sec.suggestedPrompt)}
-                          className="px-3 py-1.5 rounded-xl bg-[#1F3B8C] hover:bg-[#182E6E] text-white font-extrabold text-xs shadow-xs flex items-center gap-1.5 cursor-pointer"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-[#F59E0B]" />
-                          Ask MAM About This
-                        </button>
-                      </div>
+                      <button
+                        aria-label="Toggle entry"
+                        className="p-1.5 rounded-full bg-stone-100 text-stone-600 shrink-0 self-start mt-1"
+                      >
+                        {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      </button>
                     </div>
-                  )}
-                </div>
-              );
-            })}
+
+                    {/* Expanded Clinical Details */}
+                    {isExpanded && (
+                      <div className="mt-4 pt-4 border-t border-stone-100 space-y-3.5 text-xs text-stone-700 animate-fadeIn">
+                        {/* Draft Warning Banner */}
+                        {entry.reviewStatus === 'draft' && (
+                          <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-semibold flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                            <span><strong>Not yet reviewed:</strong> This content is in draft stage and undergoing formal clinical appraisal by Ministry of Health specialists.</span>
+                          </div>
+                        )}
+
+                        {/* Key Points */}
+                        {entry.keyPoints && entry.keyPoints.length > 0 && (
+                          <div>
+                            <div className="font-black text-[#1F3B8C] uppercase text-[11px] mb-2">Key Clinical Takeaways:</div>
+                            <ul className="space-y-1.5">
+                              {entry.keyPoints.map((kp, idx) => (
+                                <li key={idx} className="flex items-start gap-2">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                                  <span className="leading-relaxed">{kp}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* When to see clinician */}
+                        {entry.whenToSeeClinician && (
+                          <div className="p-3 bg-red-50/70 border border-red-200 rounded-xl text-red-950 space-y-1">
+                            <div className="font-black text-red-900 text-[11px] uppercase flex items-center gap-1">
+                              <HeartPulse className="w-3.5 h-3.5 text-red-600" />
+                              When to See a Clinician:
+                            </div>
+                            <p className="leading-relaxed text-[11px] font-medium">{entry.whenToSeeClinician}</p>
+                          </div>
+                        )}
+
+                        {/* Keywords Tagging */}
+                        {entry.keywords && entry.keywords.length > 0 && (
+                          <div className="flex flex-wrap items-center gap-1">
+                            <span className="text-[10px] text-stone-400 font-semibold mr-1">Keywords:</span>
+                            {entry.keywords.map((kw, kwIdx) => (
+                              <span key={kwIdx} className="text-[10px] bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded">
+                                {kw}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Source Organization & Verified URL Link */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-stone-100">
+                          <div className="flex items-center gap-1.5 text-[11px]">
+                            <span className="text-stone-500">Source:</span>
+                            <span className="font-bold text-[#1F3B8C]">{entry.sourceOrganization}</span>
+                            {entry.sourceUrl && (
+                              <a
+                                href={entry.sourceUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-0.5 ml-1 text-[10px] font-semibold underline"
+                              >
+                                View Protocol
+                                <ExternalLink className="w-2.5 h-2.5" />
+                              </a>
+                            )}
+                          </div>
+
+                          <button
+                            onClick={() => onAskQuestion(`What should I know about ${entry.title}?`)}
+                            className="px-3 py-1.5 rounded-xl bg-[#1F3B8C] hover:bg-[#182E6E] text-white font-extrabold text-xs shadow-xs flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+                          >
+                            <Sparkles className="w-3.5 h-3.5 text-[#F59E0B]" />
+                            Ask MAM About This
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
           </div>
         </div>
       )}
@@ -802,6 +1058,7 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
                 className="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl text-xs font-semibold outline-hidden focus:border-[#1F3B8C]"
               >
                 <option value="All Regions">All Regions</option>
+                <option value="Saved Facilities">★ Saved Facilities ({savedFacilityIds.length})</option>
                 <option value="Addis Ababa">Addis Ababa</option>
                 <option value="Oromia">Oromia</option>
                 <option value="Amhara">Amhara</option>
@@ -843,24 +1100,40 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
 
           {/* Facility Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredFacilities.map((fac) => (
-              <div
-                key={fac.id}
-                className="bg-white rounded-3xl p-5 border border-stone-200 shadow-xs hover:border-stone-300 transition-all space-y-3"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-100 text-[#1F3B8C]">
-                      {fac.region} • {fac.townOrSubcity}
-                    </span>
-                    <h4 className="font-extrabold text-sm sm:text-base text-[#1F3B8C] mt-1">
-                      {fac.name}
-                    </h4>
+            {filteredFacilities.map((fac) => {
+              const isSaved = savedFacilityIds.includes(fac.id);
+              return (
+                <div
+                  key={fac.id}
+                  className="bg-white rounded-3xl p-5 border border-stone-200 shadow-xs hover:border-stone-300 transition-all space-y-3"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-100 text-[#1F3B8C]">
+                        {fac.region} • {fac.townOrSubcity}
+                      </span>
+                      <h4 className="font-extrabold text-sm sm:text-base text-[#1F3B8C] mt-1">
+                        {fac.name}
+                      </h4>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-200">
+                        Verify
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleSaveFacility(fac)}
+                        className={`p-1.5 rounded-xl transition-colors cursor-pointer ${
+                          isSaved
+                            ? 'text-[#F59E0B] bg-amber-50 hover:bg-amber-100'
+                            : 'text-stone-400 hover:text-stone-700 hover:bg-stone-100'
+                        }`}
+                        title={isSaved ? 'Saved in IndexedDB (Click to unsave)' : 'Save facility to offline IndexedDB'}
+                      >
+                        {isSaved ? <BookmarkCheck className="w-4 h-4 text-[#F59E0B]" /> : <Bookmark className="w-4 h-4" />}
+                      </button>
+                    </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-200">
-                    Verify
-                  </span>
-                </div>
 
                 <div className="text-xs text-stone-600">
                   <div className="font-medium">{fac.address}</div>
@@ -912,7 +1185,8 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
                   )}
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
         </div>
       )}
@@ -1015,9 +1289,14 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
 
                 <form onSubmit={handleCreateReminder} className="space-y-3">
                   <div>
-                    <label className="text-[11px] font-bold text-stone-600 block mb-1">
-                      Reminder Title (Neutral label recommended):
-                    </label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[11px] font-bold text-stone-600">
+                        Reminder Title (Discreet label):
+                      </label>
+                      <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded">
+                        Lockscreen-safe
+                      </span>
+                    </div>
                     <input
                       type="text"
                       required
@@ -1026,6 +1305,27 @@ export const HivStiPregnancyEmergencyModule: React.FC<HivStiPregnancyEmergencyMo
                       onChange={(e) => setReminderTitle(e.target.value)}
                       className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-xs outline-hidden focus:border-[#1F3B8C]"
                     />
+                    {/* Quick Neutral Presets */}
+                    <div className="flex flex-wrap gap-1 mt-1.5">
+                      {[
+                        'Care Appointment',
+                        'Health Check-in',
+                        'Daily Supplement',
+                        'Clinic Follow-up',
+                      ].map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => setReminderTitle(preset)}
+                          className="px-2 py-0.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-[10px] font-semibold transition-colors cursor-pointer"
+                        >
+                          + {preset}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-stone-500 mt-1">
+                      🔒 Sensitive details (HIV, STI, pregnancy) are automatically kept out of notifications and lockscreen alerts.
+                    </p>
                   </div>
 
                   <div>

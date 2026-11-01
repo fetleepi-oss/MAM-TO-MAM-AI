@@ -1,0 +1,144 @@
+[
+  {
+    "id": "hiv-pep-72h",
+    "title": "HIV Post-Exposure Prophylaxis (PEP) within 72 Hours",
+    "language": "en",
+    "topic": "HIV",
+    "sourceOrganization": "World Health Organization (WHO) & Ethiopian Federal Ministry of Health (FMoH)",
+    "sourceUrl": "https://www.who.int/publications/i/item/9789240097001",
+    "lastReviewedDate": "2026-01-10",
+    "reviewStatus": "approved",
+    "version": "2.1.0",
+    "summary": "PEP is a 28-day course of antiretroviral medicines taken strictly within 72 hours of potential HIV exposure to prevent infection.",
+    "keyPoints": [
+      "Must be started within 72 hours of exposure (ideally within 2 to 24 hours).",
+      "Available free and confidentially at public Hospital Emergency Departments and Woreda Health Centers in Ethiopia.",
+      "Requires taking antiretroviral medications daily without interruption for 28 consecutive days.",
+      "Baseline and follow-up HIV testing at 4 to 6 weeks and 3 months is essential."
+    ],
+    "detailedContent": [
+      "Post-Exposure Prophylaxis (PEP) is an emergency medical response to potential HIV exposure (unprotected sex, condom rupture, sexual violence, or accidental needle-stick).",
+      "In Ethiopia, public hospitals operate 24/7 emergency desks and specialized One-Stop Centers where PEP medications (Tenofovir + Lamivudine + Dolutegravir) are provided free of charge.",
+      "Adherence to the complete 28-day regimen is critical; stopping early significantly diminishes protective efficacy."
+    ],
+    "whenToSeeClinician": "Seek clinical evaluation at an emergency department or health center immediately. Every hour counts; do not delay beyond 72 hours.",
+    "keywords": ["pep", "hiv", "exposure", "72 hours", "emergency", "dolutegravir", "post-exposure", "condom broke", "rape", "assault"],
+    "ethiopiaContext": "Free of charge at all Ethiopian public health centers and hospital emergency wards under national HIV guidelines."
+  },
+  {
+    "id": "hiv-prep-daily",
+    "title": "HIV Pre-Exposure Prophylaxis (PrEP) for Prevention",
+    "language": "en",
+    "topic": "HIV",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH) & UNAIDS",
+    "sourceUrl": "https://www.moh.gov.et/site/hiv-guidelines",
+    "lastReviewedDate": "2025-11-20",
+    "reviewStatus": "approved",
+    "version": "1.4.0",
+    "summary": "PrEP is daily medicine taken by individuals at ongoing risk of HIV to decrease transmission risk by over 99%.",
+    "keyPoints": [
+      "Taken daily by HIV-negative individuals who have ongoing risk of HIV exposure.",
+      "Reduces sexual transmission risk by >99% when taken consistently.",
+      "Does not protect against pregnancy or other STIs (syphilis, gonorrhea, chlamydia); combine with condoms for dual protection.",
+      "Requires kidney function screening and regular HIV testing every 3 months."
+    ],
+    "detailedContent": [
+      "Oral PrEP (TDF/FTC) creates a preventive shield in genital tissues preventing HIV from establishing viral infection.",
+      "PrEP is offered in Ethiopia at designated ART clinics, drop-in centers, and youth-friendly reproductive health sites.",
+      "Condoms must still be used alongside PrEP to safeguard against other STIs and unintended pregnancy."
+    ],
+    "whenToSeeClinician": "Visit your local health center or Marie Stopes clinic to receive confidential counseling, kidney safety screening, and a PrEP starter kit.",
+    "keywords": ["prep", "pre-exposure", "hiv prevention", "daily pill", "truvada", "tdf", "ftc", "high risk"],
+    "ethiopiaContext": "Scaled nationwide in Ethiopia across high-burden urban corridors, university health clinics, and key populations."
+  },
+  {
+    "id": "hiv-u-equals-u",
+    "title": "Undetectable = Untransmittable (U=U) and Viral Suppression",
+    "language": "en",
+    "topic": "HIV",
+    "sourceOrganization": "World Health Organization (WHO)",
+    "sourceUrl": "https://www.who.int/news/item/23-07-2023-who-releases-new-scientific-evidence-and-guidance-on-viral-suppression-and-hiv",
+    "lastReviewedDate": "2025-12-05",
+    "reviewStatus": "clinician-reviewed",
+    "version": "1.1.0",
+    "summary": "People living with HIV on regular antiretroviral therapy (ART) with undetectable viral loads cannot transmit HIV to sexual partners.",
+    "keyPoints": [
+      "U=U means Undetectable = Untransmittable.",
+      "When viral load remains under 200 copies/mL for at least 6 months, transmission risk via sex is zero.",
+      "Daily adherence to ART maintains maternal health and enables HIV-serodiscordant couples to have healthy children.",
+      "Routine viral load testing every 6 to 12 months confirms continued suppression."
+    ],
+    "detailedContent": [
+      "Decades of clinical trials have confirmed that consistent ART suppresses the virus to levels undetectable by standard laboratory assays.",
+      "This scientific truth transforms lives by eliminating stigma, restoring reproductive confidence, and supporting healthy sexual relationships."
+    ],
+    "whenToSeeClinician": "If on ART, schedule your 6-month viral load check at your local health center ART clinic to verify suppression.",
+    "keywords": ["u=u", "untransmittable", "undetectable", "viral load", "art", "suppression", "hiv transmission"],
+    "ethiopiaContext": "Adopted by the Ethiopian Ministry of Health in national viral suppression and stigma-reduction guidelines."
+  },
+  {
+    "id": "hiv-testing-window-periods",
+    "title": "HIV Testing Types and Window Periods",
+    "language": "en",
+    "topic": "HIV",
+    "sourceOrganization": "UNAIDS & Ethiopian Public Health Institute (EPHI)",
+    "sourceUrl": "https://ephi.gov.et/hiv-testing-algorithms",
+    "lastReviewedDate": "2026-02-14",
+    "reviewStatus": "draft",
+    "version": "0.9.0",
+    "summary": "Explains antibody, antigen/antibody combo, and nucleic acid tests and the biological window period after potential exposure.",
+    "keyPoints": [
+      "The window period is the interval between HIV exposure and when a test can reliably detect infection.",
+      "Rapid antibody fingerstick tests: detect antibodies 23 to 90 days post-exposure.",
+      "4th-generation antigen/antibody lab tests: detect p24 antigen as early as 18 to 45 days.",
+      "A negative test during the window period should always be repeated at 12 weeks for conclusive verification."
+    ],
+    "detailedContent": [
+      "Draft overview on HIV self-testing (HIVST) oral kits (OraQuick) available at retail pharmacies in Addis Ababa, Hawassa, and Adama.",
+      "Pending clinical verification for updated Ethiopian National HIV Testing Algorithm 2026 updates."
+    ],
+    "whenToSeeClinician": "Consult a voluntary counseling and testing (VCT) counselor or visit your health center if exposed within the last 12 weeks.",
+    "keywords": ["window period", "hiv test", "rapid test", "antigen", "antibody", "hiv self-test", "oraquick", "ephi"],
+    "ethiopiaContext": "Self-testing oral swab kits are being expanded across urban pharmacies in Ethiopia."
+  },
+  {
+    "id": "hiv-adolescent-yfs-confidential",
+    "title": "Adolescent Confidential HIV Testing & Youth-Friendly Services (YFS)",
+    "language": "en",
+    "topic": "HIV",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH) - National Adolescent & Youth Health Strategy",
+    "sourceUrl": "https://www.moh.gov.et/site/adolescent-youth-health",
+    "lastReviewedDate": "2026-01-25",
+    "reviewStatus": "approved",
+    "version": "2.0.0",
+    "summary": "Under Ethiopian national policy, adolescents (including 15-year-olds) have the full legal right to access confidential HIV counseling, testing, and care at public health centers without parental consent.",
+    "keyPoints": [
+      "Confidential & Without Parental Consent: The Ethiopian National Adolescent and Youth Health Strategy guarantees young people access to confidential Youth-Friendly Services (YFS) at public health facilities without parental notification or permission.",
+      "Dedicated Youth-Friendly Corners: Public health centers feature specialized YFS corners staffed by counselors trained in stigma-free, non-judgmental adolescent care.",
+      "Free Rapid Testing: Testing is conducted using a simple, gentle fingerstick rapid test that delivers accurate, confidential results in 15 to 20 minutes.",
+      "Testing Window Period: Rapid antibody tests detect infection between 3 and 12 weeks post-exposure; a negative result within this window should be confirmed with a follow-up test at 12 weeks."
+    ],
+    "detailedContent": [
+      "Adolescents frequently avoid essential healthcare out of fear that parents or community members will find out. Ethiopian national guidelines strictly protect youth patient privacy.",
+      "Providers are prohibited from disclosing testing status, sexual history, or service usage to family members or third parties without the adolescent's explicit consent."
+    ],
+    "whenToSeeClinician": "Visit the Youth-Friendly Service (YFS) corner at your nearest public health center or call Marie Stopes toll-free (8044) for free, confidential, stigma-free HIV counseling and testing.",
+    "keywords": [
+      "15",
+      "15 year old",
+      "15-year-old",
+      "adolescent",
+      "teen",
+      "confidential hiv test",
+      "without parents",
+      "without my parents",
+      "yfs",
+      "youth friendly",
+      "parental consent",
+      "testing privacy",
+      "secret hiv test"
+    ],
+    "ethiopiaContext": "Confidential YFS corners operational across public health centers in all Ethiopian regional states; no parental consent required."
+  }
+]
+

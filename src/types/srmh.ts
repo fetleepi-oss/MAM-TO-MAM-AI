@@ -1,4 +1,5 @@
-export type LanguageCode = 'en' | 'am' | 'om' | 'ti';
+export type LanguageCode = 'en' | 'am' | 'om' | 'ti' | 'so' | 'aa' | 'sid';
+export type { LanguageStatus, LanguageConfig } from '../data/translations/types';
 
 export type JourneyStage = 'learn' | 'prevent' | 'monitor' | 'seek_care' | 'emergency';
 

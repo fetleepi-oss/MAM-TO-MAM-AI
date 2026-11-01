@@ -1,7 +1,7 @@
 import React from 'react';
 import { BookOpen, ShieldCheck, Activity, Hospital, ChevronRight } from 'lucide-react';
 import { JourneyStage, LanguageCode } from '../types/srmh';
-import { translations } from '../data/translations';
+import { translations } from '../data/translations/index';
 
 interface JourneyBarProps {
   currentStage: JourneyStage;

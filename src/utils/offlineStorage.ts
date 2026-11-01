@@ -11,6 +11,7 @@
  */
 
 import { TrackerEntry, HealthFacility } from '../types/srmh';
+import { MASTER_CONTENT_LIBRARY, ContentEntry } from '../data/content/index';
 
 const DB_NAME = 'mam_to_mam_offline_db';
 const DB_VERSION = 2; // Incremented for triage_rules and saved_facilities stores
@@ -28,7 +29,7 @@ export interface HealthReminder {
 
 export interface SyncQueueItem {
   id: string;
-  action: 'save_tracker_entry' | 'delete_tracker_entry' | 'save_facility' | 'feedback_vote' | 'reminder_sync';
+  action: 'save_tracker_entry' | 'delete_tracker_entry' | 'save_facility' | 'feedback_vote' | 'reminder_sync' | 'report_translation_error';
   payload: any;
   timestamp: number;
   status: 'pending' | 'synced' | 'failed';
@@ -188,15 +189,26 @@ class OfflineStorage {
     facilities: any[];
     hivStiModules: any[];
     timeSensitiveEmergencies?: any[];
+    languagePacks?: Record<string, any>;
+    contentLibrary?: ContentEntry[];
   }): Promise<{ sizeKb: number; sizeBytes: number; timestamp: number; itemsCount: number }> {
     try {
-      // 1. Health Library (General topics + HIV/STI/Pregnancy modules + Emergencies)
+      // 1. Health Library (General topics + HIV/STI/Pregnancy modules + Emergencies + Content Library)
+      const contentLibEntries = data.contentLibrary || MASTER_CONTENT_LIBRARY;
       const allLibraryTopics = [
         ...data.learnTopics,
         ...data.hivStiModules,
         ...(data.timeSensitiveEmergencies || []),
+        ...contentLibEntries,
       ];
       await this.putAll('health_library', allLibraryTopics);
+
+      // Save structured topic-based content library specifically for fast indexed query
+      await this.putItem('app_meta', {
+        key: 'offline_content_library',
+        entries: contentLibEntries,
+        timestamp: Date.now(),
+      });
 
       // 2. Danger signs
       await this.putAll('danger_signs', data.dangerSymptoms);
@@ -208,6 +220,15 @@ class OfflineStorage {
 
       // 4. Facilities
       await this.putAll('facilities', data.facilities);
+
+      // 5. Multilingual Language Packs (English, Amharic, Afaan Oromoo, Tigrinya, Somali, Afar, Sidama)
+      if (data.languagePacks) {
+        await this.putItem('app_meta', {
+          key: 'offline_language_packs',
+          packs: data.languagePacks,
+          timestamp: Date.now(),
+        });
+      }
 
       // Compute exact byte size
       const jsonStr = JSON.stringify(data);
@@ -259,6 +280,19 @@ class OfflineStorage {
     const fallback = localStorage.getItem('mam_offline_cache_meta');
     return fallback ? JSON.parse(fallback) : null;
   }
+
+  async getContentLibrary(): Promise<ContentEntry[]> {
+    try {
+      const meta = await this.getItem<{ key: string; entries: ContentEntry[] }>('app_meta', 'offline_content_library');
+      if (meta && meta.entries && meta.entries.length > 0) {
+        return meta.entries;
+      }
+    } catch (err) {
+      console.warn('Could not read offline_content_library from IndexedDB', err);
+    }
+    return MASTER_CONTENT_LIBRARY;
+  }
+
 
   // --------------------------------------------------------------------------
   // 2. Tracker Records (Cycle & Pregnancy Logs) in IndexedDB
@@ -506,6 +540,94 @@ class OfflineStorage {
 
     return { processedCount, errorsCount };
   }
+
+  // --------------------------------------------------------------------------
+  // Data Privacy & Control: "Export my data" and "Delete everything"
+  // --------------------------------------------------------------------------
+  async exportAllUserData(): Promise<string> {
+    const trackerLogs = await this.getTrackerLogs();
+    const savedFacilities = await this.getSavedFacilities();
+    const reminders = await this.getReminders();
+    const syncQueue = await this.getSyncQueue();
+
+    // Gather local chat histories
+    const chatHistories: Record<string, any> = {};
+    const languages = ['en', 'am', 'om', 'ti', 'so', 'aa', 'sid'];
+    if (typeof localStorage !== 'undefined') {
+      for (const lang of languages) {
+        const hist = localStorage.getItem(`mam_chat_history_${lang}`);
+        if (hist) {
+          try {
+            chatHistories[lang] = JSON.parse(hist);
+          } catch {
+            chatHistories[lang] = hist;
+          }
+        }
+      }
+    }
+
+    const payload = {
+      exportVersion: '1.0.0',
+      exportTimestamp: new Date().toISOString(),
+      disclaimer: 'This export contains personal health and cycle logs stored strictly on this device.',
+      data: {
+        trackerLogs,
+        savedFacilities,
+        reminders,
+        syncQueue,
+        chatHistories,
+        preferences: {
+          selectedLanguage: localStorage.getItem('mam_selected_lang') || 'en',
+          disguiseMode: localStorage.getItem('mam_disguise_profile_id') || 'default',
+        },
+      },
+    };
+
+    return JSON.stringify(payload, null, 2);
+  }
+
+  async deleteAllUserData(): Promise<void> {
+    try {
+      const db = await this.getDB();
+      const storeNames = [
+        'tracker_logs',
+        'saved_facilities',
+        'health_reminders',
+        'sync_queue',
+        'app_meta',
+        'health_library',
+        'danger_signs',
+        'triage_rules',
+        'facilities',
+      ];
+      for (const store of storeNames) {
+        if (db.objectStoreNames.contains(store)) {
+          const tx = db.transaction(store, 'readwrite');
+          tx.objectStore(store).clear();
+        }
+      }
+    } catch (err) {
+      console.warn('Error clearing IndexedDB stores', err);
+    }
+
+    // Clear all localStorage keys associated with the application
+    if (typeof localStorage !== 'undefined') {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith('mam_') || key.includes('chat') || key.includes('tracker'))) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+    }
+
+    // Clear session storage
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.clear();
+    }
+  }
 }
 
 export const offlineStorage = new OfflineStorage();
+

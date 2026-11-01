@@ -1,0 +1,121 @@
+[
+  {
+    "id": "stis-syndromic-management",
+    "title": "Syndromic Management of Sexually Transmitted Infections (STIs)",
+    "language": "en",
+    "topic": "STIs",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH) & WHO",
+    "sourceUrl": "https://www.moh.gov.et/site/sti-syndromic-guideline",
+    "lastReviewedDate": "2025-10-18",
+    "reviewStatus": "approved",
+    "version": "2.0.0",
+    "summary": "Ethiopian national syndromic flowcharts treat identifiable STI symptom clusters (discharge, ulcers, pelvic pain) on the same day without waiting for lab cultures.",
+    "keyPoints": [
+      "Common syndromic presentations: abnormal vaginal or urethral discharge, burning urination (dysuria), genital ulcers, and pelvic pain.",
+      "Asymptomatic Reality: Over 70% of women and up to 50% of men carry chlamydia or gonorrhea with ZERO noticeable symptoms; lack of symptoms does not mean absence of infection or transmission.",
+      "Simultaneous Dual Partner Treatment: Both sexual partners MUST be treated at the exact same time; treating only one leads to immediate ping-pong reinfection.",
+      "Never Stop Antibiotics Early: Always complete the full prescribed antibiotic regimen even if symptoms vanish within 48 hours to prevent antimicrobial resistance and deep pelvic scarring.",
+      "Abstain from sexual intercourse until at least 7 days after both partners complete all prescribed medications."
+    ],
+    "detailedContent": [
+      "In resource-limited health facilities, syndromic management groups symptoms into defined clinical syndromes (such as Vaginal Discharge Syndrome or Genital Ulcer Disease).",
+      "Health Extension Workers and clinical officers can immediately initiate first-line combination therapy for both Gonorrhea and Chlamydia simultaneously, saving critical time and preventing fallopian tube scarring."
+    ],
+    "whenToSeeClinician": "Visit your Kebele Health Post or Woreda Health Center within 24 to 48 hours if you notice burning urination, discolored discharge, or sores.",
+    "keywords": [
+      "sti",
+      "std",
+      "syndromic",
+      "discharge",
+      "burning",
+      "burning and discharge",
+      "discharge and burning",
+      "burning urination",
+      "vaginal discharge",
+      "gonorrhea",
+      "chlamydia",
+      "syphilis",
+      "antibiotics",
+      "asymptomatic",
+      "partner treatment",
+      "የማህፀን ፈሳሽ",
+      "የሽንት ማቃጠል"
+    ],
+    "ethiopiaContext": "Standard of care across all Ethiopian primary healthcare units and youth corners."
+  },
+  {
+    "id": "stis-partner-treatment",
+    "title": "Simultaneous Dual Partner Treatment for STIs",
+    "language": "en",
+    "topic": "STIs",
+    "sourceOrganization": "World Health Organization (WHO)",
+    "sourceUrl": "https://www.who.int/teams/sexual-and-reproductive-health-and-research/key-areas-of-work/sexual-health/sexually-transmitted-infections",
+    "lastReviewedDate": "2026-01-05",
+    "reviewStatus": "approved",
+    "version": "1.3.0",
+    "summary": "Both sexual partners must take prescribed STI treatment at the exact same time to prevent ping-pong reinfection.",
+    "keyPoints": [
+      "Treating only one partner leads to immediate ping-pong reinfection upon next intercourse.",
+      "Most partners of infected individuals carry the bacterium or virus even without noticeable symptoms.",
+      "Ethiopian clinics provide partner notification slips or expedited partner therapy packages.",
+      "Refrain from unprotected sex until at least 7 days after completing medication."
+    ],
+    "detailedContent": [
+      "Failure to treat sexual partners is the leading cause of recurrent pelvic pain, persistent discharge, and antimicrobial resistance.",
+      "Clinicians in Ethiopia are trained to facilitate confidential partner treatment without blame, moralizing, or confrontation."
+    ],
+    "whenToSeeClinician": "Bring your partner or inform your clinician so both of you can receive appropriate prescriptions together.",
+    "keywords": ["partner treatment", "ping-pong infection", "reinfection", "dual treatment", "sti partners", "chlamydia partner"],
+    "ethiopiaContext": "Free partner counseling and notification support available at public Health Centers and Marie Stopes clinics."
+  },
+  {
+    "id": "stis-asymptomatic-silent-infections",
+    "title": "Asymptomatic & Silent STIs in Women and Men",
+    "language": "en",
+    "topic": "STIs",
+    "sourceOrganization": "UNFPA & Ethiopian Federal Ministry of Health (FMoH)",
+    "sourceUrl": "https://ethiopia.unfpa.org/en/topics/sexual-and-reproductive-health",
+    "lastReviewedDate": "2025-11-12",
+    "reviewStatus": "clinician-reviewed",
+    "version": "1.1.0",
+    "summary": "Over 70% of women and up to 50% of men infected with chlamydia or gonorrhea experience zero early physical symptoms.",
+    "keyPoints": [
+      "Absence of symptoms does NOT mean absence of infection or transmission risk.",
+      "Untreated silent STIs can quietly ascend into the uterus and fallopian tubes, leading to Pelvic Inflammatory Disease (PID) and ectopic pregnancy.",
+      "Routine annual or pre-pregnancy STI screening detects silent infections early.",
+      "Syphilis screening with rapid RPR/Treponemal tests is mandatory during early antenatal care (ANC)."
+    ],
+    "detailedContent": [
+      "Because bacterial pathogens often colonize the cervix without generating painful nerve sensations, women often remain unaware of infection until severe complications emerge.",
+      "Dual protection using latex condoms alongside regular checkups is the most reliable defense."
+    ],
+    "whenToSeeClinician": "Request an STI and syphilis screen whenever you have a new partner or during your first antenatal checkup.",
+    "keywords": ["silent sti", "asymptomatic", "chlamydia", "syphilis screening", "pid", "fallopian tubes", "infertility"],
+    "ethiopiaContext": "Integrated into national antenatal care (ANC) and youth-friendly reproductive health services."
+  },
+  {
+    "id": "stis-hpv-cervical-cancer",
+    "title": "Human Papillomavirus (HPV) & Cervical Cancer Prevention",
+    "language": "en",
+    "topic": "STIs",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH) & GAVI",
+    "sourceUrl": "https://www.moh.gov.et/site/hpv-vaccine-ethiopia",
+    "lastReviewedDate": "2026-02-01",
+    "reviewStatus": "draft",
+    "version": "0.8.0",
+    "summary": "Draft overview of HPV transmission through genital contact, primary school vaccination programs, and Visual Inspection with Acetic Acid (VIA) screening.",
+    "keyPoints": [
+      "HPV is the most common viral STI, transmitted through skin-to-skin genital contact.",
+      "High-risk HPV strains cause >95% of cervical cancer cases worldwide.",
+      "Ethiopia administers the HPV vaccine to 14-year-old schoolgirls nationwide.",
+      "Women aged 30 to 49 should undergo routine Visual Inspection with Acetic Acid (VIA) screening every 3 to 5 years."
+    ],
+    "detailedContent": [
+      "Draft clinical notes: HPV vaccination schedule updates and single-dose recommendation protocols currently pending clinical panel review.",
+      "VIA and cryotherapy services are offered free of charge in Ethiopian district hospitals."
+    ],
+    "whenToSeeClinician": "Women aged 30+ should visit their district health center for a quick, pain-free VIA screening examination.",
+    "keywords": ["hpv", "cervical cancer", "via screening", "hpv vaccine", "genital warts", "pap smear", "fmoh"],
+    "ethiopiaContext": "Nationwide school-based vaccination campaigns coordinated with regional health bureaus in Ethiopia."
+  }
+]

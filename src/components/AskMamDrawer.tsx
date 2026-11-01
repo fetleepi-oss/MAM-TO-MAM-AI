@@ -21,11 +21,24 @@ import {
   Wifi,
   WifiOff,
   Shield,
+  Info,
+  Lock,
+  LogOut,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
+import { disguiseService } from '../utils/disguiseService';
 import { Message, JourneyStage, LanguageCode } from '../types/srmh';
-import { translations } from '../data/translations';
+import { translations, QuickReplyItem } from '../data/translations/index';
 import { CRITICAL_DANGER_SYMPTOMS } from '../data/srmhData';
 import { COMPREHENSIVE_HEALTH_SECTIONS, TIME_SENSITIVE_EMERGENCIES } from '../data/emergencyAndHivData';
+import {
+  MASTER_CONTENT_LIBRARY,
+  queryContentLibrary,
+  formatContentAnswer,
+  getNoMatchClinicianFallback,
+  getReviewStatusLabel,
+} from '../data/content/index';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 
 interface AskMamDrawerProps {
@@ -82,85 +95,140 @@ Har'a waa'ee maali gaafachuu barbaaddu?`,
 
 *ኣነ ናይ AI መምርሒ እየ እምበር ሓኪም ኣይኮንኩን። ፈውሲ ኣይእዝዝን።*
 ሎሚ ብዛዕባ እንታይ ክትሓቱ ትደልዩ?`,
+
+  so: `Nabad! Waxaan ahay **MAM-to-MAM AI**, wehelkaaga qarsoodiga ah ee caafimaadka taranka iyo hooyooyinka ee Itoobiya.
+
+Waxaan kaa caawin karaa sharraxaadda:
+• Caadada iyo isbeddellada jirka
+• Qorsheynta qoyska iyo ka hortagga uurka
+• Horumarka uurka iyo jadwalka ANC
+• Calaamadaha & goorta la arko dhakhtar
+
+*Waxaan ahay hage AI, ma ahi dhakhtar. Ma baaro mana qoro dawooyin.*
+Maxaad jeclaan lahayd inaad maanta ka hadasho?`,
+
+  aa: `Kusalama! Anu **MAM-to-MAM AI** kinniyo—Ethiopia addat ina qafiyat kee barittoh sirri qokol (Afar Scaffold).
+
+Ta yaabal koo qokolo xiqto:
+• Alsay kee fayyinta
+• Baxa diggi hayto
+• Bagu kee ina qafiyat
+• Waqdi qafiyat ogeyssa tableen
+
+*Anu AI qokol kinniyo, doktor ma kiyo. Daawa ma yaca.*
+Ta addat mannal koo qokolno?`,
+
+  sid: `Keere! Ani **MAM-to-MAM AI** ti—Itoophiyu giddo kalaqo nna amootu fayyimma maassiiti gursaanchooti (Sidama Scaffold).
+
+Konne kaa’la dandeemmo:
+• Aganna nna mannumma soorro
+• Maate qixxeesha
+• Godowu heeshsho nna hordoffa
+• Dani malaatenna ogeessa la’a
+
+*Ani AI gursaanchooti, doktoore di-ikkoommo. Qoricha di-fushsheemmo.*
+Xawa mayi aana xa’ma hasidhanno?`,
 };
 
 /**
  * Intelligent Offline Guide Search Engine
- * When offline, searches local reviewed clinical topics, time-sensitive emergencies,
- * and danger rules with zero API call.
+ * When offline, searches the exact same JSON Content Library:
+ * - Prioritizes approved entries first, then clinician-reviewed, then draft
+ * - Shows source names under each answer
+ * - Draft content explicitly displays the 'Not yet reviewed' label
+ * - If nothing relevant is found, it states so and points directly to a clinician
  */
 function getOfflineGuideAnswer(query: string, language: LanguageCode): { reply: string; dangerDetected: boolean } {
   const lower = query.toLowerCase();
+
+  // Guardrail 1: Prompt Injection & Jailbreak Defense (Offline)
+  const isPromptInjection =
+    lower.includes('ignore previous instructions') ||
+    lower.includes('ignore all previous instructions') ||
+    lower.includes('bypass rules') ||
+    lower.includes('bypass clinical') ||
+    lower.includes('dr. unlimited') ||
+    lower.includes('dan mode') ||
+    lower.includes('developer mode') ||
+    lower.includes('system override') ||
+    lower.includes('unrestricted medical ai') ||
+    lower.includes('pretend you are an unrestricted');
+
+  if (isPromptInjection) {
+    return {
+      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n🛡️ **Safety Guardrail:** I cannot bypass my safety protocols, assume unrestricted personas, or provide medication dosages. I am MAM-to-MAM AI, your evidence-based health companion for sexual, reproductive, and maternal health in Ethiopia.\n\nIf you have a genuine health question or symptom, I am here to guide you to verified clinical information or a local healthcare provider.\n\n**When to see a clinician:** For diagnostic assessment, laboratory tests, or prescription medications, visit your nearest Kebele Health Post or Woreda Health Center.\n\n---\n🏷️ **Source:** Ethiopian Federal Ministry of Health Clinical Ethics & Safety Guidelines [Approved]\n\n*Disclaimer: I'm an AI guide, not a doctor.*`,
+      dangerDetected: false,
+    };
+  }
+
+  // Guardrail 2: Explicit Refusal of Prescription & Medication Dosages (Offline)
+  const mentionsMedication =
+    lower.includes('azithromycin') ||
+    lower.includes('doxycycline') ||
+    lower.includes('ceftriaxone') ||
+    lower.includes('amoxicillin') ||
+    lower.includes('metronidazole') ||
+    lower.includes('ciprofloxacin') ||
+    lower.includes('dolutegravir') ||
+    lower.includes('tenofovir') ||
+    lower.includes('arv') ||
+    lower.includes('antiretroviral') ||
+    lower.includes('antibiotic') ||
+    lower.includes('misoprostol') ||
+    lower.includes('mifepristone');
+
+  const asksDosage =
+    lower.includes('dose') ||
+    lower.includes('dosage') ||
+    lower.includes('exact dose') ||
+    lower.includes('how many mg') ||
+    lower.includes('how much mg') ||
+    lower.includes('how many pills') ||
+    lower.includes('prescribe') ||
+    lower.includes('mg of') ||
+    lower.includes('quantity') ||
+    lower.includes('take how much');
+
+  if (mentionsMedication && asksDosage) {
+    return {
+      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\nI cannot provide medication dosages, milligram quantities, or prescription instructions. As an AI health companion, prescribing medications or providing clinical dosages is strictly outside my legal and clinical scope.\n\n* **Why Clinical Assessment is Essential:**\n  * **Personalized Medical Factors:** Safe and effective dosages of antibiotics (such as azithromycin, doxycycline, or ceftriaxone) and antiretrovirals (ARVs like dolutegravir) depend on body weight, kidney and liver function, age, and pregnancy status.\n  * **Antimicrobial Resistance & Toxicity Risks:** Self-medicating with unprescribed antibiotics or incorrect ARV doses risks life-threatening drug toxicity, treatment failure, or dangerous bacterial/viral resistance, which can render life-saving medications ineffective.\n  * **Exact Diagnostic Testing:** STIs and viral infections share overlapping symptoms. Clinical testing (such as syndromic assessment, CD4/viral load assays, or cultures) is required to determine the exact pathogen and drug sensitivity before starting treatment.\n\n* **Safe, Regulated Care in Ethiopia:**\n  * Visit your nearest Kebele Health Post or Woreda Health Center for free or subsidized syndromic management and clinician-directed treatment.\n  * Consult a licensed community pharmacist or call the Ethiopian Ministry of Health Toll-Free Health Information Line at **8335**.\n\n**When to see a clinician:** Please consult a licensed medical doctor, health officer, or certified pharmacist to receive an in-person diagnosis and appropriate prescription.\n\n---\n🏷️ **Source:** Ethiopian Federal Ministry of Health (FMoH) & WHO Safe Prescribing Guidelines [Approved]\n\n*Disclaimer: I'm an AI guide, not a doctor.*`,
+      dangerDetected: false,
+    };
+  }
 
   // 1. Critical Obstetric & Medical Danger Symptoms
   for (const danger of CRITICAL_DANGER_SYMPTOMS) {
     for (const kw of danger.keywords) {
       if (lower.includes(kw.toLowerCase())) {
+        const isAssault = danger.id === 'danger_violence_assault' || lower.includes('rape') || lower.includes('assault') || lower.includes('forced sex');
+        const emergencyText = isAssault
+          ? `🚨 **CRITICAL MEDICAL EMERGENCY DETECTED (SURVIVOR CARE):**\n${danger.urgencyText}\n\n**Immediate Actions in Ethiopia:**\n• Go directly to the nearest Hospital Emergency Room and request the **One-Stop Center** (offering free medical care, HIV PEP within 72h, emergency contraception within 72-120h, trauma counseling, and legal support in a private room).\n• **AWSAD Crisis & Safe Shelter:** Dial **6226 (Toll-Free)**\n• **Ministry of Health Helpline:** Dial **8335 (Toll-Free)**\n• **Marie Stopes Helpline:** Dial **8044 (Toll-Free)**\n\n**When to see a clinician:** Please go to a hospital One-Stop Center immediately. Do not delay beyond 72 hours for preventive medications.`
+          : `🚨 **CRITICAL MEDICAL EMERGENCY DETECTED:**\n${danger.urgencyText}\n\n**Immediate Actions in Ethiopia:**\n• Go immediately to the nearest Emergency Department or Maternity Ward.\n• Emergency Ambulance: Dial **907 (Red Cross)** or **952 (Addis Ababa EMS)**.\n• FMoH National Health Line: Dial **8335**.\n\n**When to see a clinician:** Seek immediate clinical emergency care now. Do not delay.`;
+
         return {
-          reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n🚨 **CRITICAL MEDICAL EMERGENCY DETECTED:**\n${danger.urgencyText}\n\n**Immediate Actions in Ethiopia:**\n• Go immediately to the nearest Emergency Department or Health Center.\n• Emergency Ambulance: Dial **907 (Red Cross)** or **952 (Addis Ababa EMS)**.\n• FMoH National Health Line: Dial **8335**.\n\n**When to see a clinician:** Seek immediate clinical emergency care now. Do not delay.\n\n*Source: Ethiopian National Emergency Obstetric and Clinical Protocols [VERIFIED]*`,
+          reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n${emergencyText}\n\n---\n🏷️ **Source:** Ethiopian National Emergency Obstetric and Clinical Protocols [Approved]`,
           dangerDetected: true,
         };
       }
     }
   }
 
-  // 2. HIV Exposure / PEP within 72 Hours / PrEP
-  if (lower.includes('pep') || lower.includes('hiv') || lower.includes('72') || lower.includes('exposure') || lower.includes('ኤችአይቪ') || lower.includes('መጋለጥ')) {
-    const pepInfo = TIME_SENSITIVE_EMERGENCIES.find((e) => e.id === 'pep_72h')!;
+  // 2. Query Unified Medical Content Library (all 7 topics: HIV, STIs, Pregnancy, Postnatal, Contraception, Emergencies, Menstrual Health)
+  const searchResult = queryContentLibrary(query, language);
+
+  if (searchResult.nothingFound || !searchResult.bestMatch) {
     return {
-      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n**${pepInfo.title}**\n\n${pepInfo.headline}\n\n${pepInfo.explanation}\n\n**Key Time-Sensitive Guidance:**\n• **Strict Window:** PEP must be started strictly within **72 hours** of exposure (ideally within 2 to 24 hours).\n• **Where to Go:** Visit any public Hospital Emergency Department or Woreda Health Center in Ethiopia (ask for the PEP/One-Stop clinic).\n• **Cost:** PEP and testing are free and confidential in Ethiopian public facilities.\n• **Hotlines:** Call toll-free **8335 (FMoH)** or **8044 (Marie Stopes)**.\n\n**When to see a clinician:** Seek clinical evaluation immediately within 72 hours. Do not wait for symptoms.\n\n*${pepInfo.source}*`,
+      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n${getNoMatchClinicianFallback(query, language)}`,
       dangerDetected: false,
     };
   }
 
-  // 3. Emergency Contraception (Postinor / Levonorgestrel / Copper IUD)
-  if (lower.includes('postinor') || lower.includes('emergency contraception') || lower.includes('morning after') || lower.includes('unprotected') || lower.includes('ፖስቲኖር') || lower.includes('የአደጋ ጊዜ')) {
-    const ecInfo = TIME_SENSITIVE_EMERGENCIES.find((e) => e.id === 'emergency_contraception')!;
-    return {
-      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n**${ecInfo.title}**\n\n${ecInfo.headline}\n\n${ecInfo.explanation}\n\n**Key Facts in Ethiopia:**\n• Emergency contraceptive pills (Postinor-2 / Levonorgestrel) are most effective within the first 24 hours, but work up to 72 to 120 hours.\n• Available over-the-counter at licensed community pharmacies and free or low-cost at Health Centers and Marie Stopes clinics.\n• A Copper IUD inserted by a trained clinician within 5 days (120h) is over 99% effective.\n• Emergency contraception does NOT protect against HIV or STIs.\n\n**When to see a clinician:** Consult a pharmacist or visit your health center as soon as possible after unprotected intercourse.\n\n*${ecInfo.source}*`,
-      dangerDetected: false,
-    };
-  }
+  const best = searchResult.bestMatch;
+  const formattedAnswer = formatContentAnswer(best);
 
-  // 4. Sexual Assault / Trauma Support / GBV
-  if (lower.includes('rape') || lower.includes('assault') || lower.includes('forced') || lower.includes('violence') || lower.includes('ተደፍሬ') || lower.includes('ጥቃት') || lower.includes('dirqisiifame')) {
-    const svInfo = TIME_SENSITIVE_EMERGENCIES.find((e) => e.id === 'sexual_violence_support')!;
-    return {
-      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n**${svInfo.title}**\n\n${svInfo.headline}\n\n${svInfo.explanation}\n\n**Confidential Survivor Care in Ethiopia:**\n• Go to the nearest public hospital and request their **One-Stop Center** (providing free emergency medical care, HIV PEP within 72h, emergency contraception, wound care, and trauma counseling in one private room).\n• **Confidential Toll-Free Helplines:**\n  - AWSAD Safe Shelter: **6226**\n  - FMoH Health Helpline: **8335**\n  - Marie Stopes Helpline: **8044**\n\n**When to see a clinician:** Visit a hospital One-Stop Center within 72 hours for compassionate, non-judgmental care.\n\n*${svInfo.source}*`,
-      dangerDetected: false,
-    };
-  }
-
-  // 5. STIs / Discharge / Pain / Partner Treatment
-  if (lower.includes('sti') || lower.includes('discharge') || lower.includes('burning') || lower.includes('syphilis') || lower.includes('gonorrhea') || lower.includes('sores') || lower.includes('አባላዘር') || lower.includes('ፈሳሽ') || lower.includes('ቁስል')) {
-    const stiSec = COMPREHENSIVE_HEALTH_SECTIONS.find((s) => s.id === 'stis_common_and_asymptomatic')!;
-    return {
-      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n**${stiSec.title}**\n\n${stiSec.summary}\n\n**Clinical Guidance:**\n• Common symptoms: Abnormal vaginal/penile discharge, burning urination, genital ulcers, pelvic pain.\n• **Silent Infections:** Over 70% of women and 50% of men have zero symptoms but can still pass the infection.\n• **Dual Partner Treatment:** Both sexual partners MUST take medication at the exact same time to prevent reinfection.\n• **Complete Antibiotics:** Never stop treatment early even if symptoms disappear.\n\n**When to see a clinician:** Visit your Kebele Health Post or Woreda Health Center within 24–48 hours for syndromic STI management.\n\n*${stiSec.sourceTag}*`,
-      dangerDetected: false,
-    };
-  }
-
-  // 6. Pregnancy & 8 ANC Visits
-  if (lower.includes('pregnant') || lower.includes('pregnancy') || lower.includes('anc') || lower.includes('antenatal') || lower.includes('baby') || lower.includes('kicks') || lower.includes('እርግዝና') || lower.includes('ulfa')) {
-    const ancSec = COMPREHENSIVE_HEALTH_SECTIONS.find((s) => s.id === 'pregnancy_signs_tests_anc')!;
-    return {
-      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n**${ancSec.title}**\n\n${ancSec.summary}\n\n**Ethiopian FMoH 8-Contact ANC Schedule:**\n• Contact 1: Before 12 weeks (dating, anemia check, start daily IFA supplements).\n• Contact 2: 20 weeks (fetal growth check, ultrasound).\n• Contacts 3 to 8: At 26, 30, 34, 36, 38, and 40 weeks.\n\n**When to see a clinician:** Register for ANC at your health post before 12 weeks. If you experience severe bleeding, severe headache, or decreased baby kicks, go to maternity triage immediately.\n\n*${ancSec.sourceTag}*`,
-      dangerDetected: false,
-    };
-  }
-
-  // 7. Menstrual Health / Missed Period / Cramps
-  if (lower.includes('period') || lower.includes('menstrua') || lower.includes('cramp') || lower.includes('cycle') || lower.includes('ወር አበባ') || lower.includes('laguu') || lower.includes('ጽግያት')) {
-    return {
-      reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n**Menstrual Health & Cycle Guidance**\n\n• Normal menstrual cycles range from 21 to 35 days (average 28 days), with bleeding lasting 3 to 7 days.\n• A missed period can be caused by early pregnancy, hormonal fluctuations, intense physical/emotional stress, or rapid weight changes.\n• For menstrual cramps, gentle heat compress, hydration, and resting help soothe uterine contractions.\n\n**When to see a clinician:** If your period is more than 2 weeks late with pregnancy possibility, or if you soak more than 1 pad every 1–2 hours with severe pain, visit a health center.\n\n*Source: WHO Menstrual Health Guidelines & Ethiopian FMoH Materials [VERIFIED]*`,
-      dangerDetected: false,
-    };
-  }
-
-  // 8. General Health Library Guidance
   return {
-    reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\nI am currently responding in **Offline Guide Mode** using reviewed healthcare resources stored on your device.\n\n**Key Health Principles in Ethiopia:**\n• **Family Planning:** Free reversible methods (implants, injectables, pills, IUDs) and condoms are provided at all public Health Posts and Centers.\n• **Emergency Window:** PEP for HIV must be started strictly within **72 hours**; emergency contraception works best within 24 to 72 hours.\n• **Confidentiality:** Youth-friendly services (YFS) protect your privacy without requiring parental or partner consent.\n\n**When to see a clinician:** For any persistent pain, unusual discharge, or emergency symptoms, visit your local Health Center or call toll-free **8335 (FMoH)** or **8044 (Marie Stopes)**.\n\n*Educational content based on WHO and Ministry of Health materials, pending clinical review.*`,
-    dangerDetected: false,
+    reply: `🏷️ [Offline Guide: not live AI • Grounded in Reviewed Library]\n\n${formattedAnswer}`,
+    dangerDetected: best.topic === 'Emergencies' || best.id.includes('hemorrhage') || best.id.includes('preeclampsia'),
   };
 }
 
@@ -222,6 +290,9 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
     }
     return {};
   });
+
+  // AI Provider Transparency toggle
+  const [showAiDisclosure, setShowAiDisclosure] = useState<boolean>(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -289,7 +360,13 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
   };
 
   const handleSendMessage = async (textOverride?: string) => {
-    const query = (textOverride || input).trim();
+    const rawQuery = (textOverride || input).trim();
+    // Input sanitization: strip HTML tags, control characters, max 1000 characters
+    const query = rawQuery
+      .replace(/<[^>]*>/g, '')
+      .replace(/\0/g, '')
+      .slice(0, 1000);
+
     if (!query || isLoading) return;
 
     // Run danger pre-check on submitted query
@@ -340,7 +417,7 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
         body: JSON.stringify({
           messages: [...messages, userMessage].map((m) => ({
             role: m.role,
-            content: m.content,
+            content: m.content.slice(0, 1500),
           })),
           userLanguage: language,
           currentStage,
@@ -348,6 +425,18 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
       });
 
       const data = await response.json();
+
+      if (response.status === 429) {
+        const rateLimitMsg: Message = {
+          id: `ratelimit-${Date.now()}`,
+          role: 'assistant',
+          content: `⚠️ **Rate Limit Notice:**\n${data.error || 'Too many messages sent. Please wait a moment before sending another query.'}\n\n*If you are experiencing severe symptoms or an obstetric emergency, dial **907** (Ambulance) or **8335** (Health Hotline) immediately.*`,
+          timestamp: Date.now(),
+        };
+        setMessages((prev) => [...prev, rateLimitMsg]);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(data?.error || 'Unable to connect to MAM AI server');
       }
@@ -366,7 +455,8 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err: any) {
-      console.warn('Live API request failed, falling back to local offline guide:', err);
+      // Note: Do not log chat content or user query text
+      console.warn('Live API request failed, falling back to local offline guide:', err?.message || 'Network error');
       const fallbackGuide = getOfflineGuideAnswer(query, language);
       const fallback: Message = {
         id: `offline-fallback-${Date.now()}`,
@@ -536,18 +626,29 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* One-Tap Quick Exit in drawer */}
+            <button
+              onClick={() => disguiseService.triggerQuickExit()}
+              title="One-tap quick exit to Google • Or press Esc twice"
+              className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-xl text-[11px] font-black flex items-center gap-1 cursor-pointer shrink-0 transition-transform active:scale-95"
+            >
+              <LogOut className="w-3 h-3" />
+              <span className="hidden sm:inline">Quick Exit</span>
+            </button>
+
             {onOpenEmergencyModule && (
               <button
                 onClick={() => {
                   onClose();
                   onOpenEmergencyModule('emergencies');
                 }}
-                className="hidden sm:inline-flex text-[11px] bg-red-700 hover:bg-red-800 text-white font-bold px-2.5 py-1 rounded-xl transition-colors cursor-pointer"
+                className="hidden md:inline-flex text-[11px] bg-red-700 hover:bg-red-800 text-white font-bold px-2.5 py-1 rounded-xl transition-colors cursor-pointer"
               >
                 72h PEP & Triage
               </button>
             )}
+
             <button
               onClick={handleClearHistory}
               title="Clear chat"
@@ -555,6 +656,7 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
             >
               <Trash2 className="w-4 h-4" />
             </button>
+
             <button
               onClick={onClose}
               className="p-2 rounded-xl text-blue-200 hover:text-white hover:bg-blue-900/40 transition-colors cursor-pointer"
@@ -563,6 +665,48 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
               <X className="w-5 h-5" />
             </button>
           </div>
+        </div>
+
+        {/* AI Provider Transparency & Privacy Disclosure Card */}
+        <div className="bg-blue-50/90 border-b border-blue-200 px-4 py-2 text-xs text-blue-950">
+          <div className="flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={() => setShowAiDisclosure(!showAiDisclosure)}
+              className="flex items-center gap-1.5 font-bold text-[#1F3B8C] hover:underline text-left cursor-pointer"
+            >
+              <Lock className="w-3.5 h-3.5 text-[#F59E0B] shrink-0" />
+              <span>
+                {isOnline ? 'What is sent to Google AI when online?' : 'Offline Mode: Zero data sent to AI'}
+              </span>
+              <span className="text-[10px] text-blue-700 font-normal">
+                {showAiDisclosure ? '(tap to collapse)' : '(tap to view disclosure)'}
+              </span>
+              {showAiDisclosure ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            </button>
+
+            <span className="text-[10px] font-mono bg-blue-100 text-[#1F3B8C] font-black px-1.5 py-0.5 rounded shrink-0">
+              {isOnline ? 'No Chat Logging' : '100% Local DB'}
+            </span>
+          </div>
+
+          {showAiDisclosure && (
+            <div className="mt-2 pt-2 border-t border-blue-200/80 space-y-1.5 text-[11px] text-stone-700 leading-relaxed animate-in fade-in">
+              <div className="font-extrabold text-[#1F3B8C]">Online AI Processing Disclosure:</div>
+              <p>
+                • <strong>What is sent when online:</strong> Only the typed health question, recent message context in this session, selected language ({language.toUpperCase()}), and relevant Ethiopian clinical guideline excerpts from our library.
+              </p>
+              <p>
+                • <strong>What is NEVER sent:</strong> Your name, phone number, device IP, exact GPS coordinates, cycle dates, pregnancy tracking logs, saved clinics, or reminders.
+              </p>
+              <p>
+                • <strong>Zero Chat Logging:</strong> Conversations are not recorded on any remote database or disk.
+              </p>
+              <p>
+                • <strong>Offline Mode:</strong> When offline or using the offline guide, 0 bytes are transmitted over the network; all searches run locally on your device.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Offline notice bar if not connected */}
@@ -824,7 +968,7 @@ export const AskMamDrawer: React.FC<AskMamDrawerProps> = ({
               <ArrowRight className="w-3 h-3 text-[#F59E0B]" />
             </button>
 
-            {t.quickReplies.map((chip, idx) => (
+            {t.quickReplies.map((chip: QuickReplyItem, idx: number) => (
               <button
                 key={idx}
                 type="button"

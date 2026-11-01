@@ -3,6 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Gracefully ignore Vite HMR WebSocket connection closed errors in iframe/sandbox environments
+      window.addEventListener('error', function (event) {
+        if (
+          event.message &&
+          (event.message.includes('WebSocket') ||
+           event.message.includes('ws') ||
+           event.filename?.includes('@vite/client'))
+        ) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          return true;
+        }
+      }, true);
+      window.addEventListener('unhandledrejection', function (event) {
+        if (
+          event.reason &&
+          (String(event.reason).includes('WebSocket') ||
+           event.reason?.stack?.includes('@vite/client'))
+        ) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
+    </script>
     <title>MAM-to-MAM AI</title>
     <meta name="description" content="AI-Enabled Sexual, Reproductive & Maternal Health. An early MVP / proof of concept for Ethiopia." />
     <meta property="og:title" content="MAM-to-MAM AI" />

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { LanguageCode, LearnTopic } from '../../types/srmh';
 import { LEARN_TOPICS } from '../../data/srmhData';
+import { isLanguageClinicalReviewed } from '../../data/translations/index';
 
 interface LearnModuleProps {
   language: LanguageCode;
@@ -97,11 +98,13 @@ export const LearnModule: React.FC<LearnModuleProps> = ({
           const isExpanded = expandedTopicId === topic.id;
           const Icon = ICON_MAP[topic.iconName] || Sparkles;
 
-          const localizedTitle =
-            language === 'am' ? topic.titleAm :
-            language === 'om' ? topic.titleOm :
-            language === 'ti' ? topic.titleTi :
-            topic.title;
+          const isReviewed = isLanguageClinicalReviewed(language);
+          const localizedTitle = isReviewed
+            ? (language === 'am' ? topic.titleAm :
+               language === 'om' ? topic.titleOm :
+               language === 'ti' ? topic.titleTi :
+               topic.title)
+            : topic.title;
 
           return (
             <div
@@ -134,6 +137,11 @@ export const LearnModule: React.FC<LearnModuleProps> = ({
                     <h3 className="font-extrabold text-stone-900 text-sm sm:text-base">
                       {localizedTitle}
                     </h3>
+                    {!isReviewed && (
+                      <span className="text-[10px] text-amber-800 font-semibold bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-md inline-block mt-0.5">
+                        Translation pending review • Showing verified English
+                      </span>
+                    )}
                     <p className="text-xs text-stone-500 line-clamp-1 mt-0.5">
                       {topic.shortSummary}
                     </p>

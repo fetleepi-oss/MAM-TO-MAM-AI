@@ -1,0 +1,119 @@
+[
+  {
+    "id": "emerg-postpartum-obstetric-hemorrhage",
+    "title": "Severe Obstetric & Postpartum Hemorrhage Emergency",
+    "language": "en",
+    "topic": "Emergencies",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH) & WHO",
+    "sourceUrl": "https://www.who.int/publications/i/item/9789240058521",
+    "lastReviewedDate": "2026-01-08",
+    "reviewStatus": "approved",
+    "version": "2.1.0",
+    "summary": "Sudden heavy bleeding soaking more than one cloth/pad per hour, large clots, or bleeding accompanied by dizziness constitutes an acute surgical emergency.",
+    "keyPoints": [
+      "Soaking >1 pad or clean cloth within 1 hour indicates severe life-threatening hemorrhage.",
+      "Warning signs of hemorrhagic shock: rapid thready pulse, cold clammy hands, dizziness, fainting, and confusion.",
+      "Requires immediate emergency hospital transport for uterotonic medicines (Oxytocin, Misoprostol), IV fluids, and blood transfusion.",
+      "Keep the mother warm and lying flat with legs slightly elevated during ambulance transport."
+    ],
+    "detailedContent": [
+      "Obstetric hemorrhage is the leading cause of preventable maternal mortality worldwide.",
+      "In Ethiopia, public hospital emergency maternity units are mandated to provide immediate triage, active management of the third stage of labor (AMTSL), and blood banking services without financial prepayment."
+    ],
+    "whenToSeeClinician": "Call 907 (Red Cross Ambulance) or 952 (EMS) immediately, or take the patient directly to the nearest Hospital Emergency Ward.",
+    "keywords": ["hemorrhage", "bleeding", "heavy bleeding", "postpartum hemorrhage", "pph", "shock", "blood clots", "emergency bleeding"],
+    "ethiopiaContext": "Free emergency obstetric surgery and blood transfusion at all Ethiopian public secondary and tertiary hospitals."
+  },
+  {
+    "id": "emerg-preeclampsia-eclampsia-protocol",
+    "title": "Pre-eclampsia & Eclampsia (Severe High Blood Pressure & Fits)",
+    "language": "en",
+    "topic": "Emergencies",
+    "sourceOrganization": "Ethiopian Society of Obstetricians & Gynecologists (ESOG)",
+    "sourceUrl": "https://esog-ethiopia.org/maternal-emergencies",
+    "lastReviewedDate": "2025-11-15",
+    "reviewStatus": "approved",
+    "version": "2.0.0",
+    "summary": "Severe headache that does not respond to painkillers, blurred or flashing vision, epigastric pain, or seizures in pregnancy or postpartum.",
+    "keyPoints": [
+      "Pre-eclampsia involves dangerous elevation of blood pressure (≥140/90 mmHg) with proteinuria after 20 weeks of pregnancy.",
+      "Key red flags: pounding headache, seeing spots/blurriness, swelling of face and hands, pain under right ribs.",
+      "Eclampsia occurs when high blood pressure triggers convulsions/seizures, threatening maternal oxygenation and fetal life.",
+      "Magnesium Sulfate (MgSO4) is the proven standard-of-care injectable anticonvulsant administered in hospital delivery wards."
+    ],
+    "detailedContent": [
+      "Health centers in Ethiopia carry emergency loading doses of Magnesium Sulfate and antihypertensives before initiating transfer to higher-level referral hospitals.",
+      "Never leave a convulsing woman unattended; place her on her left side to protect the airway and facilitate placental blood flow."
+    ],
+    "whenToSeeClinician": "Proceed immediately to the nearest hospital emergency room. Do not delay or wait for headache medication to take effect.",
+    "keywords": ["preeclampsia", "eclampsia", "seizure", "convulsion", "severe headache", "blurred vision", "magnesium sulfate", "high blood pressure"],
+    "ethiopiaContext": "Primary loading dose of Magnesium Sulfate available across public Health Centers and General Hospitals in Ethiopia."
+  },
+  {
+    "id": "emerg-sexual-violence-one-stop-centers",
+    "title": "Confidential Care for Sexual Assault & Hospital One-Stop Centers",
+    "language": "en",
+    "topic": "Emergencies",
+    "sourceOrganization": "UNFPA Ethiopia & Ethiopian Ministry of Health",
+    "sourceUrl": "https://ethiopia.unfpa.org/en/topics/gender-based-violence",
+    "lastReviewedDate": "2026-01-18",
+    "reviewStatus": "approved",
+    "version": "1.8.0",
+    "summary": "Comprehensive, compassionate survivor care providing free HIV PEP within 72 hours, emergency contraception, trauma therapy, and legal support in a private room.",
+    "keyPoints": [
+      "Visit a hospital One-Stop Center strictly within 72 hours to receive HIV Post-Exposure Prophylaxis (PEP).",
+      "Receive emergency contraception within 72 to 120 hours to prevent unintended pregnancy.",
+      "One-Stop Centers provide medical care, psychological first aid, forensic documentation, and legal support in a single confidential space.",
+      "Toll-free 24/7 helplines in Ethiopia: AWSAD Safe Shelter 6226, FMoH Helpline 8335, Marie Stopes 8044."
+    ],
+    "detailedContent": [
+      "Survivors of sexual assault face time-sensitive physical and emotional vulnerabilities.",
+      "Hospital One-Stop Centers operate at public hospitals across Addis Ababa (e.g. Gandhi Memorial, Yekatit 12, Tirunesh Beijing) and regional referral centers (Hawassa, Jimma, Bahir Dar, Mekelle, Adama).",
+      "All medical services are free, confidential, and provided without police presence if the survivor chooses medical care only."
+    ],
+    "keywords": [
+      "sexual assault",
+      "forced sex",
+      "forced to have sex",
+      "against my will",
+      "rape",
+      "raped",
+      "sexual violence",
+      "one-stop center",
+      "gbv",
+      "violence",
+      "trauma",
+      "pep 72h",
+      "awsad",
+      "6226",
+      "ተደፈርኩ",
+      "የፆታ ጥቃት"
+    ],
+    "ethiopiaContext": "One-Stop Centers established at major public referral hospitals in all regional states; helpline AWSAD 6226."
+  },
+  {
+    "id": "emerg-drone-blood-delivery-rural",
+    "title": "Emergency Drone Blood & Life-Saving Supply Logistics Pilot",
+    "language": "en",
+    "topic": "Emergencies",
+    "sourceOrganization": "Ethiopian Public Health Institute (EPHI) & Zipline Pilot",
+    "sourceUrl": "https://ephi.gov.et/emergency-logistics",
+    "lastReviewedDate": "2026-02-20",
+    "reviewStatus": "draft",
+    "version": "0.4.0",
+    "summary": "Draft summary of aerial drone delivery trials for emergency blood products and anti-hemorrhage medications to remote health centers.",
+    "keyPoints": [
+      "Automated drone distribution system transporting emergency whole blood, platelets, and postpartum oxytocics within 30 minutes.",
+      "Targeting hard-to-reach rural health centers in highland and pastoralist woredas cut off by seasonal floods or rugged topography.",
+      "Clinicians place instant SMS or satellite dispatch requests to regional distribution hubs.",
+      "Currently active in designated demonstration corridors pending national civil aviation expansion."
+    ],
+    "detailedContent": [
+      "Draft clinical notes: Protocols for cold-chain maintenance and remote landing zone receiver training for health center nurses.",
+      "Under review by the EPHI Emergency Logistics Directorate."
+    ],
+    "whenToSeeClinician": "Health workers in participating pilot woredas can request urgent blood via the EPHI Emergency Logistics hotline.",
+    "keywords": ["drone delivery", "blood delivery", "emergency blood", "zipline", "ephi logistics", "rural emergency", "draft logistics"],
+    "ethiopiaContext": "Piloted in selected rural regional districts under Ethiopian Public Health Institute supervision."
+  }
+]

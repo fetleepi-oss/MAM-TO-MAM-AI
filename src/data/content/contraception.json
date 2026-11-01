@@ -1,0 +1,151 @@
+[
+  {
+    "id": "contra-modern-reversible-methods",
+    "title": "Modern Reversible Contraceptive Options in Ethiopia",
+    "language": "en",
+    "topic": "Contraception",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH) & Marie Stopes Ethiopia",
+    "sourceUrl": "https://mariestopes.org.et/services/family-planning",
+    "lastReviewedDate": "2025-10-30",
+    "reviewStatus": "approved",
+    "version": "2.1.0",
+    "summary": "Overview of free, safe, reversible contraceptive methods available across Ethiopian public health posts, health centers, and NGO clinics.",
+    "keyPoints": [
+      "Implants (Implanon NXT / Jadelle): Small flexible rod under the arm; >99% effective for 3 to 5 years; immediate fertility return on removal.",
+      "3-Month Injectable (Depo-Provera): Discreet injection every 12-13 weeks; safe during breastfeeding; does not require daily memory.",
+      "Copper IUD: Non-hormonal T-device placed in the uterus; lasts up to 10-12 years with natural monthly periods.",
+      "Oral Contraceptive Pills: Combined or progestin-only pills taken once daily at the same time."
+    ],
+    "detailedContent": [
+      "Family planning is completely free of charge in public Ethiopian health facilities under the national reproductive health strategy.",
+      "Youth aged 15-24 have the legal and clinical right to access confidential Youth-Friendly Services (YFS) without parental or partner consent."
+    ],
+    "whenToSeeClinician": "Visit your local Kebele Health Post or Woreda Health Center to consult a midwife or HEW on the method best suited for your lifestyle.",
+    "keywords": ["contraception", "family planning", "implanon", "jadelle", "depo-provera", "iud", "birth control pills", "yfs", "marie stopes"],
+    "ethiopiaContext": "Free of charge at all public Kebele Health Posts and Woreda Health Centers; Marie Stopes toll-free 8044."
+  },
+  {
+    "id": "contra-emergency-contraception-ec",
+    "title": "Emergency Contraception (Postinor-2 & Copper IUD)",
+    "language": "en",
+    "topic": "Contraception",
+    "sourceOrganization": "World Health Organization (WHO) & Ethiopian Ministry of Health",
+    "sourceUrl": "https://www.who.int/news-room/fact-sheets/detail/emergency-contraception",
+    "lastReviewedDate": "2026-01-12",
+    "reviewStatus": "approved",
+    "version": "1.4.0",
+    "summary": "Emergency methods to prevent unintended pregnancy after unprotected intercourse, condom breakage, or missed contraceptive pills.",
+    "keyPoints": [
+      "Emergency Contraceptive Pills (Postinor-2 / Levonorgestrel 1.5mg): Most effective when taken within 24 hours, but works up to 72 to 120 hours.",
+      "Available over-the-counter at licensed pharmacies and free/subsidized at Health Centers and Marie Stopes clinics in Ethiopia.",
+      "Does NOT induce abortion: Works by delaying ovulation and cannot terminate an established pregnancy.",
+      "Copper IUD insertion within 5 days (120 hours) of unprotected intercourse is >99% effective and provides ongoing protection for 10 years."
+    ],
+    "detailedContent": [
+      "Emergency contraception is designed as a safety backup, not regular ongoing contraception.",
+      "Emergency pills do not protect against HIV or other sexually transmitted infections; if potential HIV exposure occurred, seek PEP within 72 hours."
+    ],
+    "whenToSeeClinician": "Consult a pharmacist or health center as soon as possible after unprotected intercourse. The sooner taken, the higher the efficacy.",
+    "keywords": [
+      "emergency contraception",
+      "postinor",
+      "postinor-2",
+      "levonorgestrel",
+      "morning after pill",
+      "unprotected sex",
+      "copper iud",
+      "የድንገተኛ የወሊድ መከላከያ",
+      "የድንገተኛ እርግዝና መከላከያ",
+      "ፖስቲኖር",
+      "ፖስቲኖር-2",
+      "የግብረ-ስጋ ግንኙነት"
+    ],
+    "ethiopiaContext": "Available over-the-counter at community pharmacies across Ethiopia; also provided at Marie Stopes clinics (Helpline: 8044)."
+  },
+  {
+    "id": "contra-emergency-contraception-ec-am",
+    "title": "የድንገተኛ የወሊድ መከላከያ (ፖስቲኖር-2 እና የኮፐር ሉፕ)",
+    "language": "am",
+    "topic": "Contraception",
+    "sourceOrganization": "የዓለም ጤና ድርጅት (WHO) እና የኢትዮጵያ ጤና ጥበቃ ሚኒስቴር (FMoH)",
+    "sourceUrl": "https://www.who.int/news-room/fact-sheets/detail/emergency-contraception",
+    "lastReviewedDate": "2026-01-12",
+    "reviewStatus": "approved",
+    "version": "1.4.0",
+    "summary": "ያለ መከላከያ የግብረ-ስጋ ግንኙነት ከተፈጸመ በኋላ ያልተፈለገ እርግዝናን ለመከላከል የሚያገለግሉ የድንገተኛ ዘዴዎች (ፖስቲኖር-2 ወይም የኮፐር ሉፕ)።",
+    "keyPoints": [
+      "የድንገተኛ የወሊድ መከላከያ እንክብል (ፖስቲኖር-2 / Levonorgestrel 1.5mg)፡ ግንኙነት ከተፈጸመ በኋላ በተቻለ ፍጥነት መወሰድ አለበት (በተለይ በ24 ሰዓታት ውስጥ፣ ነገር ግን እስከ 72-120 ሰዓታት/3-5 ቀናት ይሰራል)።",
+      "ፅንስ አያስወርድም፡ የእንቁላል መፈጠርን (ovulation) በማዘግየት እርግዝና እንዳይፈጠር ይከላከላል እንጂ የተፈጠረን እርግዝና አያቋርጥም።",
+      "ከኤችአይቪ ወይም ከአባላዘር በሽታዎች አይከላከልም፡ የኤችአይቪ ተጋላጭነት ካለ በ72 ሰዓታት ውስጥ የድንገተኛ መከላከያ መድኃኒት (PEP) መጀመር አለብዎት።",
+      "የኮፐር ማህፀን ሉፕ (Copper IUD)፡ ግንኙነት ከተፈጸመ በ5 ቀናት (120 ሰዓታት) ውስጥ በጤና ባለሙያ ቢገባ ከ99% በላይ ውጤታማ ሲሆን ለ10 ዓመታት ቀጣይነት ያለው ጥበቃ ይሰጣል።"
+    ],
+    "detailedContent": [
+      "የድንገተኛ የወሊድ መከላከያ ለአደጋ ጊዜ ብቻ የሚያገለግል እንጂ መደበኛ የወሊድ መከላከያ አይደለም።",
+      "በኢትዮጵያ ውስጥ በማንኛውም የማህበረሰብ ፋርማሲ ያለ ሀኪም ማዘዣ በግል መግዛት ይቻላል፤ በማሪ ስቶፕስ ክሊኒኮች እና በጤና ጣቢያዎችም ይገኛል።"
+    ],
+    "whenToSeeClinician": "ግንኙነት ከተፈጸመ በኋላ በተቻለ ፍጥነት በአቅራቢያዎ የሚገኝ ፋርማሲ፣ ጤና ጣቢያ ወይም የማሪ ስቶፕስ ክሊኒክ (በነጻ የስልክ መስመር 8044) ያማክሩ።",
+    "keywords": [
+      "የድንገተኛ የወሊድ መከላከያ",
+      "የድንገተኛ እርግዝና መከላከያ",
+      "ፖስቲኖር",
+      "ፖስቲኖር-2",
+      "postinor",
+      "emergency contraception",
+      "የግብረ-ስጋ ግንኙነት",
+      "ያለ መከላከያ",
+      "ኮፐር ሉፕ",
+      "እርግዝና መከላከያ እንክብል"
+    ],
+    "ethiopiaContext": "በሁሉም የማህበረሰብ ፋርማሲዎች ያለ ማዘዣ ይገኛል፤ በማሪ ስቶፕስ ክሊኒኮች (ነጻ መስመር፡ 8044) እና በመንግስት ጤና ጣቢያዎች ይሰጣል።"
+  },
+  {
+    "id": "contra-dual-protection-condoms",
+    "title": "Dual Protection: Condoms with Long-Acting Contraception",
+    "language": "en",
+    "topic": "Contraception",
+    "sourceOrganization": "UNFPA & Ethiopian Public Health Institute (EPHI)",
+    "sourceUrl": "https://ethiopia.unfpa.org/en/publications",
+    "lastReviewedDate": "2025-12-10",
+    "reviewStatus": "clinician-reviewed",
+    "version": "1.2.0",
+    "summary": "Using condoms simultaneously with an implant, IUD, or injectable achieves dual protection against both pregnancy and STIs/HIV.",
+    "keyPoints": [
+      "Implants, IUDs, and injectables protect exceptionally well against pregnancy but offer ZERO defense against HIV or STIs.",
+      "Male and female latex condoms are the only barrier method that physically blocks transmission of HIV, syphilis, and gonorrhea.",
+      "Dual protection ensures both partners maintain optimal reproductive health without compromise.",
+      "Condoms are distributed free of charge at all public health facilities and youth centers in Ethiopia."
+    ],
+    "detailedContent": [
+      "In Ethiopia, public health campaigns encourage adolescents and young adults to adopt dual protection consistently.",
+      "Correct and consistent condom use involves checking expiry dates, opening packaging carefully, leaving a reservoir tip, and single-use disposal."
+    ],
+    "whenToSeeClinician": "Collect free condoms at your Kebele Health Post or youth corner and discuss long-acting reversible options with your clinician.",
+    "keywords": ["dual protection", "condoms", "male condoms", "female condoms", "sti prevention", "implant and condom"],
+    "ethiopiaContext": "Promoted across Ethiopian universities, vocational colleges, and community youth centers."
+  },
+  {
+    "id": "contra-sayana-press-self-injection",
+    "title": "DMPA-SC (Sayana Press) Subcutaneous Self-Injection Pilot",
+    "language": "en",
+    "topic": "Contraception",
+    "sourceOrganization": "PATH & Ethiopian Federal Ministry of Health (FMoH)",
+    "sourceUrl": "https://www.path.org/our-work/reproductive-health/dmpa-sc/",
+    "lastReviewedDate": "2026-02-15",
+    "reviewStatus": "draft",
+    "version": "0.5.0",
+    "summary": "Draft protocol for home self-injection of 3-month subcutaneous medroxyprogesterone acetate (Sayana Press) using a prefilled all-in-one device.",
+    "keyPoints": [
+      "Sayana Press is a prefilled single-use injection device with a small needle administered under the skin of the abdomen or thigh.",
+      "Provides 3 months of contraceptive protection with lower hormone dose than intramuscular Depo-Provera.",
+      "Trained women can self-administer at home without clinic visits after receiving HEW demonstration.",
+      "Safe storage and sharps container disposal are essential home requirements."
+    ],
+    "detailedContent": [
+      "Draft clinical notes: Pilot implementation study guidelines across select agrarian woredas in Oromia, Amhara, and Sidama regions.",
+      "Pending final national regulatory rollout by the Ethiopian Food and Drug Authority (EFDA)."
+    ],
+    "whenToSeeClinician": "Ask your Health Extension Worker whether the Sayana Press demonstration pilot is operational in your woreda.",
+    "keywords": ["sayana press", "dmpa-sc", "self-injection", "subcutaneous", "home injection", "fmoh pilot", "draft contraception"],
+    "ethiopiaContext": "Currently undergoing regional pilot evaluation in selected woredas in Ethiopia."
+  }
+]

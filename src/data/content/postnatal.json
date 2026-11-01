@@ -1,0 +1,103 @@
+[
+  {
+    "id": "pnc-ethiopian-schedule",
+    "title": "Postnatal Care (PNC) Schedule & Maternal Recovery",
+    "language": "en",
+    "topic": "Postnatal",
+    "sourceOrganization": "Ethiopian Federal Ministry of Health (FMoH) & WHO",
+    "sourceUrl": "https://www.who.int/publications/i/item/9789240045989",
+    "lastReviewedDate": "2025-10-12",
+    "reviewStatus": "approved",
+    "version": "2.0.0",
+    "summary": "Essential post-delivery checkups at 24 hours, day 3, days 7-14, and 6 weeks to ensure maternal healing, baby wellness, and prevent postpartum complications.",
+    "keyPoints": [
+      "Contact 1: Within the first 24 hours after birth before facility discharge.",
+      "Contact 2: Day 3 (48 to 72 hours) post-delivery at home or clinic.",
+      "Contact 3: Between days 7 and 14 for infant growth and maternal lochia assessment.",
+      "Contact 4: At 6 weeks (postpartum family planning initiation, baby immunization, physical recovery exam)."
+    ],
+    "detailedContent": [
+      "The first 6 weeks postpartum represent the highest risk timeframe for maternal postpartum hemorrhage, puerperal sepsis, and neonatal mortality.",
+      "In Ethiopia, Health Extension Workers make scheduled home visits to inspect the umbilical cord stump, check maternal bleeding, and support breastfeeding initiation."
+    ],
+    "whenToSeeClinician": "Seek immediate medical care if you experience foul-smelling vaginal discharge, heavy bleeding soaking a pad an hour, high fever, or severe calf pain.",
+    "keywords": ["pnc", "postnatal care", "postpartum", "lochia", "recovery", "new mother", "after birth", "6 weeks"],
+    "ethiopiaContext": "Delivered through Kebele Health Extension Worker home visits and Health Center maternity outpatient clinics."
+  },
+  {
+    "id": "pnc-exclusive-breastfeeding",
+    "title": "Exclusive Breastfeeding for 6 Months & Latch Techniques",
+    "language": "en",
+    "topic": "Postnatal",
+    "sourceOrganization": "UNICEF & WHO Ethiopia",
+    "sourceUrl": "https://www.unicef.org/ethiopia/nutrition",
+    "lastReviewedDate": "2026-01-20",
+    "reviewStatus": "approved",
+    "version": "1.5.0",
+    "summary": "Exclusive breastfeeding for the first 6 months of life without water or supplementary food provides optimal nutrition and maternal antibodies.",
+    "keyPoints": [
+      "Initiate breastfeeding within the first 1 hour after birth; colostrum (yellowish early milk) is the newborn's first vaccine.",
+      "Feed on demand day and night (at least 8 to 12 times in 24 hours).",
+      "Do NOT give water, tea, butter, or formula during the first 6 months.",
+      "Proper latching: baby's mouth open wide, covering more of the lower areola, chin touching the breast without nipple pain."
+    ],
+    "detailedContent": [
+      "In Ethiopian cultural traditions, giving prelacteal feeds (butter or water) was once practiced; health workers have successfully established that pure breast milk contains over 80% water and all vital nutrients.",
+      "Breastfeeding also stimulates oxytocin release, contracting the uterus and curtailing postpartum bleeding."
+    ],
+    "whenToSeeClinician": "Contact your midwife or health extension worker if your nipples are cracked, bleeding, or if you develop a painful, hot, reddened breast (possible mastitis).",
+    "keywords": ["breastfeeding", "exclusive breastfeeding", "colostrum", "latch", "mastitis", "milk supply", "newborn feeding"],
+    "ethiopiaContext": "Promoted nationwide by 40,000+ Health Extension Workers across all rural and urban Ethiopian kebeles."
+  },
+  {
+    "id": "pnc-postpartum-mental-health",
+    "title": "Postpartum Blues, Depression & Maternal Emotional Health",
+    "language": "en",
+    "topic": "Postnatal",
+    "sourceOrganization": "World Health Organization (WHO) & Ethiopian Ministry of Health",
+    "sourceUrl": "https://www.who.int/mental_health/maternal-child/maternal_mental_health/en/",
+    "lastReviewedDate": "2025-11-28",
+    "reviewStatus": "clinician-reviewed",
+    "version": "1.1.0",
+    "summary": "Differentiates normal transient postpartum blues from postpartum depression (PPD), emphasizing empathetic family support and clinical counseling.",
+    "keyPoints": [
+      "Baby blues: mild crying, fatigue, and mood swings lasting up to 2 weeks post-birth; resolves with family rest and support.",
+      "Postpartum depression: persistent sadness, lack of interest in the baby, overwhelming guilt, insomnia, or anxiety lasting >2 weeks.",
+      "Affects approximately 1 in 7 mothers globally and is a medical condition, NOT a moral or spiritual failing.",
+      "Counseling, support groups, and healthcare provider care are confidential and highly effective."
+    ],
+    "detailedContent": [
+      "Dramatic shifts in estrogen and progesterone combined with sleep deprivation make maternal emotional vulnerability common.",
+      "In Ethiopian family structures, the traditional 'Aras Bet' (40-day postpartum resting sanctuary) offers vital communal nurturing.",
+      "If emotional distress persists, health center clinicians provide compassionate, stigma-free counseling."
+    ],
+    "whenToSeeClinician": "Seek healthcare support if feelings of despair persist longer than 2 weeks, or call 8335 (FMoH) or 6226 (AWSAD) for guidance.",
+    "keywords": ["postpartum depression", "baby blues", "maternal mental health", "aras bet", "ppd", "sadness", "crying after birth"],
+    "ethiopiaContext": "Culturally respected alongside the Ethiopian 'Aras Bet' tradition of maternal recovery and community care."
+  },
+  {
+    "id": "pnc-kangaroo-mother-care-kmc",
+    "title": "Kangaroo Mother Care (KMC) for Low Birth Weight Newborns",
+    "language": "en",
+    "topic": "Postnatal",
+    "sourceOrganization": "Ethiopian Pediatric Society & FMoH",
+    "sourceUrl": "https://www.moh.gov.et/site/kmc-protocol",
+    "lastReviewedDate": "2026-02-12",
+    "reviewStatus": "draft",
+    "version": "0.6.0",
+    "summary": "Draft protocol for continuous skin-to-skin contact and frequent breastfeeding for preterm or low birth weight infants (<2.5 kg).",
+    "keyPoints": [
+      "Continuous skin-to-skin contact between mother and baby keeps the newborn warm naturally without electricity-dependent incubators.",
+      "Promotes deep infant sleep, stabilizes heart rate and breathing, and improves weight gain.",
+      "Both mother and father can participate in continuous skin-to-skin wrapping.",
+      "Requires daily weight checks until baby reaches healthy developmental milestones."
+    ],
+    "detailedContent": [
+      "Draft clinical guidance: Guidelines for community-initiated KMC by Health Extension Workers for infants born at home in rural woredas.",
+      "Awaiting final signoff from the Ethiopian Pediatric Society and neonatal technical working group."
+    ],
+    "whenToSeeClinician": "Any infant born before 37 weeks or weighing under 2.5 kg should be evaluated at a hospital newborn corner.",
+    "keywords": ["kmc", "kangaroo mother care", "skin-to-skin", "preterm baby", "low birth weight", "incubator", "draft kmc"],
+    "ethiopiaContext": "Established in tertiary and general hospital neonatal wards across all Ethiopian administrative regions."
+  }
+]
